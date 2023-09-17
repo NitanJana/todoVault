@@ -3,28 +3,25 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: {
-    index: './src/index.js',
-  },
+  entry:'./src/index.js',
+  
   devtool: 'inline-source-map',
   devServer: {
     static: './dist',
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: '//ToDo App',
+      template: './src/index.html',
+      filename: 'index.html',
+      chunks: ['main'],
     }),
   ],
   output: {
-    filename: '[name].bundle.js',
+    filename: 'main.js',
     path: path.resolve(__dirname,'dist'),
     clean: true,
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
+  
   
   module: {
     rules: [

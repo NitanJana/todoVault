@@ -1,3 +1,19 @@
-.heading {
-  color: red;
+*,*::after,*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body{
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 4fr;
+}
+
+.sidebar {
+  background-color: #f4f4f4;
+}
+
+.main {
+  background-color: #ffffff;
 }
