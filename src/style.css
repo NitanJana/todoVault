@@ -1,19 +1,66 @@
-*,*::after,*::before {
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap");
+
+:root {
+  --primary-white: #ffffff;
+  --accent-color: #146cc4;
+  --primary-gray: #f4f4f4;
+  --secondary-gray: #505050;
+}
+
+*,
+*::after,
+*::before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body{
+body {
+  font-family: "Ubuntu", sans-serif;
   height: 100vh;
   display: grid;
   grid-template-columns: 1fr 4fr;
 }
 
 .sidebar {
-  background-color: #f4f4f4;
+  background-color: var(--primary-gray);
+  display: grid;
+  grid-template-rows: 1fr 2rem;
 }
 
+.projects{
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.project-button{
+  cursor: pointer;
+}
+
+.new-project {
+  border-top: 1px solid var(--secondary-gray);
+  padding-left: 2rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Project page */
 .main {
-  background-color: #ffffff;
+  background-color: var(--primary-white);
+  padding: 6rem 2rem 0rem 4rem;
+}
+
+.project-name {
+  font-size: 2rem;
+  font-weight: 500;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+}
+
+.project-description {
+  font-size: 1.05rem;
+  color: var(--secondary-gray);
 }
