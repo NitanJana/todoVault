@@ -1,29 +1,32 @@
 import Project from "./project";
+import ProjectList from "./projectList";
 
-export default class displayController {
+let list = new ProjectList();
+
+export default class DisplayController {
   static loadHomePage() {
-    this.openProject('Inbox');
+    this.openProject(new Project('Inbox'));
     this.initProjectButtons();
   }
 
-  static openProject(projectName) {
-    const projectNameDest = document.querySelector('.project-name');
-    projectNameDest.textContent = projectName;
+  static openProject(project) {
+    document.querySelector('.project-name').textContent = project.getName();
   }
 
   static initProjectButtons() {
     const projectButtons = document.querySelectorAll('.project-button');
     const newProjectButton = document.querySelector('.new-project');
 
-    projectButtons.forEach((projectButton) => projectButton.addEventListener('click',this.handleProjectButtons));
-    newProjectButton.addEventListener('click', this.handleNewProjectButton);
+    projectButtons.forEach((projectButton) => projectButton.addEventListener('click',DisplayController.handleProjectButtons));
+    newProjectButton.addEventListener('click', DisplayController.createNewProject);
   }
 
   static handleProjectButtons(e) {
-    displayController.openProject(this.textContent);
+    console.log(this.textContent);
+    DisplayController.openProject(list.getProject(this.textContent));
   }
   
-  static handleNewProjectButton(e) {
+  static createNewProject(e) {
     
     let input = document.createElement('input');
     let saveButton = document.createElement('button');
@@ -45,7 +48,10 @@ export default class displayController {
       outputDiv.textContent = text;
       containerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project project-button';
-      outputDiv.addEventListener('click',displayController.handleProjectButtons)
+      outputDiv.addEventListener('click',DisplayController.handleProjectButtons)
+
+      list.addProject(new Project(text));
+      console.log(list.getProjects());
     });
     
     removeButton.addEventListener('click', function() {

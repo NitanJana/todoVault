@@ -1,5 +1,5 @@
-import displayController from "./modules/displayController";
+import DisplayController from "./modules/displayController";
 import "./style.css";
 
-displayController.loadHomePage();
+DisplayController.loadHomePage();
 
