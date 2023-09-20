@@ -11,8 +11,27 @@ export default class DisplayController {
   }
 
   static openProject(project) {
+    this.loadProjectName(project);
+    this.loadProjectDescription(project);    
+    this.loadProjectTodos(project);
+  }
+  
+  static loadProjectName(project) {
     document.querySelector('.project-name').textContent = project.getName();
+  }
+  
+  static loadProjectDescription(project) {
     document.querySelector('.project-description').textContent = project.getDescription();
+  }
+
+  static loadProjectTodos(project) {
+    const todosContainer = document.querySelector('.project-todos-container');
+    todosContainer.textContent = '';
+    project.getTodos().forEach((todo) => {
+      const tempTodo = document.createElement('div');
+      tempTodo.textContent = todo.getTitle();
+      todosContainer.appendChild(tempTodo);
+    });
   }
 
   static initProjectButtons() {
@@ -40,11 +59,10 @@ export default class DisplayController {
     input.type = 'text';
     saveButton.textContent = 'Save';
     removeButton.textContent = 'Remove';
-
     containerDiv.classList.add('container');
-    
     containerDiv.append(input,saveButton,removeButton);
     document.getElementById('projects-container').appendChild(containerDiv);    
+    input.focus();
     
     saveButton.addEventListener('click', function() {
       let text = input.value;
@@ -53,7 +71,6 @@ export default class DisplayController {
       containerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project project-button';
       outputDiv.addEventListener('click',DisplayController.handleProjectButtons)
-
       list.addProject(new Project(text));
       console.log(list.getProjects());
     });
@@ -72,20 +89,16 @@ export default class DisplayController {
     input.type = 'text';
     saveButton.textContent = 'Save';
     removeButton.textContent = 'Remove';
-
     containerDiv.classList.add('container');
-    
     containerDiv.append(input,saveButton,removeButton);
     document.querySelector('.project-todos-container').appendChild(containerDiv);    
+    input.focus();
     
     saveButton.addEventListener('click', function() {
       let text = input.value;
       let outputDiv = document.createElement('div');
       outputDiv.textContent = text;
       containerDiv.replaceWith(outputDiv);
-      outputDiv.className = 'sidebar-user-project project-button';
-      outputDiv.addEventListener('click',DisplayController.handleProjectButtons)
-
       list.getProject(document.querySelector('.project-name').textContent).addTodo(text);
     });
     
