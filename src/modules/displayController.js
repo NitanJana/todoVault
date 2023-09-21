@@ -50,17 +50,21 @@ export default class DisplayController {
   }
   
   static createNewProject(e) {
-    
+  let existingProjectCreateContainer = document.querySelector('.project-create-container');
+  
+  if (!existingProjectCreateContainer) {
     let input = document.createElement('input');
     let saveButton = document.createElement('button');
     let removeButton = document.createElement('button');
     let containerDiv = document.createElement('div');
     
     input.type = 'text';
-    saveButton.textContent = 'Save';
-    removeButton.textContent = 'Remove';
-    containerDiv.classList.add('container');
-    containerDiv.append(input,saveButton,removeButton);
+    saveButton.textContent = '✓';
+    removeButton.textContent = 'x';
+    saveButton.classList.add('project-save-button');
+    removeButton.classList.add('project-remove-button');
+    containerDiv.classList.add('project-create-container');
+    containerDiv.append(input, saveButton, removeButton);
     document.getElementById('projects-container').appendChild(containerDiv);    
     input.focus();
     
@@ -70,43 +74,53 @@ export default class DisplayController {
       outputDiv.textContent = text;
       containerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project project-button';
-      outputDiv.addEventListener('click',DisplayController.handleProjectButtons)
+      outputDiv.addEventListener('click', DisplayController.handleProjectButtons);
       list.addProject(new Project(text));
-      console.log(list.getProjects());
+      DisplayController.openProject(list.getProject(text));
     });
     
     removeButton.addEventListener('click', function() {
       containerDiv.remove();
     }); 
+  } else {
+    existingProjectCreateContainer.focus();
   }
+}
+
 
   static createNewTodo(e) {
-    let input = document.createElement('input');
-    let saveButton = document.createElement('button');
-    let removeButton = document.createElement('button');
-    let containerDiv = document.createElement('div');
-    
-    input.type = 'text';
-    saveButton.textContent = 'Save';
-    removeButton.textContent = 'Remove';
-    containerDiv.classList.add('container');
-    containerDiv.append(input,saveButton,removeButton);
-    document.querySelector('.project-todos-container').appendChild(containerDiv);    
-    input.focus();
-    
-    saveButton.addEventListener('click', function() {
-      let text = input.value;
-      let outputDiv = document.createElement('div');
-      outputDiv.textContent = text;
-      containerDiv.replaceWith(outputDiv);
-      list.getProject(document.querySelector('.project-name').textContent).addTodo(text);
-    });
-    
-    removeButton.addEventListener('click', function() {
-      containerDiv.remove();
-    }); 
+    let existingTodoCreateContainer = document.querySelector('.todo-create-container');
+  
+    if (!existingTodoCreateContainer) {
+      let input = document.createElement('input');
+      let saveButton = document.createElement('button');
+      let removeButton = document.createElement('button');
+      let containerDiv = document.createElement('div');
+      
+      input.type = 'text';
+      saveButton.textContent = 'Save';
+      removeButton.textContent = 'Remove';
+      containerDiv.classList.add('todo-create-container');
+      containerDiv.append(input, saveButton, removeButton);
+      document.querySelector('.project-todos-container').appendChild(containerDiv);
+      input.focus();
+      
+      saveButton.addEventListener('click', function () {
+        let text = input.value;
+        let outputDiv = document.createElement('div');
+        outputDiv.textContent = text;
+        outputDiv.classList.add('todo');
+        containerDiv.replaceWith(outputDiv);
+        list.getProject(document.querySelector('.project-name').textContent).addTodo(text);
+      });
+      
+      removeButton.addEventListener('click', function () {
+        containerDiv.remove();
+      });
+    }else {
+    existingTodoCreateContainer.focus();
   }
-
+  }
  
 
 }
