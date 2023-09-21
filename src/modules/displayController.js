@@ -29,8 +29,11 @@ export default class DisplayController {
     todosContainer.textContent = '';
     project.getTodos().forEach((todo) => {
       const tempTodo = document.createElement('div');
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = 'delete';
+      deleteButton.addEventListener ('click',DisplayController.handleDeleteTodoButton)
       tempTodo.textContent = todo.getTitle();
-      todosContainer.appendChild(tempTodo);
+      todosContainer.append(tempTodo,deleteButton);
     });
   }
 
@@ -108,7 +111,10 @@ export default class DisplayController {
       saveButton.addEventListener('click', function () {
         let text = input.value;
         let outputDiv = document.createElement('div');
-        outputDiv.textContent = text;
+        let deleteButton = document.createElement('button');
+        deleteButton.textContent = 'delete';
+        outputDiv.append(text, deleteButton);
+        deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
         outputDiv.classList.add('todo');
         containerDiv.replaceWith(outputDiv);
         list.getProject(document.querySelector('.project-name').textContent).addTodo(text);
@@ -119,8 +125,12 @@ export default class DisplayController {
       });
     }else {
     existingTodoCreateContainer.focus();
+    }
   }
+  
+  static handleDeleteTodoButton() {
+    list.getProject(document.querySelector('.project-name').textContent).removeTodo(this.previousSibling.textContent);
+    DisplayController.openProject(list.getProject(document.querySelector('.project-name').textContent));
   }
- 
 
 }

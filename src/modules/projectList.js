@@ -21,6 +21,6 @@ export default class ProjectList {
   }
 
   getProject(projectName) {
-    return this.projectList.find((project) => project.getName() === projectName)
+    return this.projectList.find((project) => project.getName() === projectName);
   }
 }

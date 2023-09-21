@@ -33,4 +33,12 @@ export default class Project {
   addTodo(todo) {
     this.todos.push(new ToDo(todo));
   }
+
+  removeTodo(todo) {
+    this.setTodos(this.todos.filter(item => item !== this.getTodo(todo)));
+  }
+
+  getTodo(todoName) {
+    return this.todos.find((todo) => todo.getTitle() === todoName)
+  }
 }
