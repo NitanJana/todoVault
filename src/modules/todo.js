@@ -1,16 +1,16 @@
 export default class ToDo {
-  constructor(title, description, dueDate, priority) {
-    this.title = title;
+  constructor(name, description, dueDate, priority) {
+    this.name = name;
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
   }
 
-  setTitle(value) {
-    this.title = value;
+  setName(name) {
+    this.name = name;
   }
-  getTitle() {
-    return this.title;
+  getName() {
+    return this.name;
   }
 
   setDescription(value) {

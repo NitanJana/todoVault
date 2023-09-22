@@ -3,7 +3,7 @@ export default class Project {
   constructor(name) {
     this.name = name;
     this.description = `Keep The talk and the slides simple: what are the three things about these that everyone should remember?`;
-    this.todos = [];
+    this.todoList = [];
   }
 
   setName(name) {
@@ -22,23 +22,23 @@ export default class Project {
     return this.description;
   }
 
-  setTodos(todos) {
-    this.todos = todos;
+  setTodoList(todoList) {
+    this.todoList = todoList;
   }
 
-  getTodos() {
-    return this.todos;
+  getTodoList() {
+    return this.todoList;
   }
 
   addTodo(todo) {
-    this.todos.push(new ToDo(todo));
+    this.todoList.push(new ToDo(todo));
   }
 
   removeTodo(todo) {
-    this.setTodos(this.todos.filter(item => item !== this.getTodo(todo)));
+    this.setTodoList(this.todoList.filter(item => item !== this.getTodo(todo)));
   }
 
   getTodo(todoName) {
-    return this.todos.find((todo) => todo.getTitle() === todoName)
+    return this.todoList.find((todo) => todo.getName() === todoName)
   }
 }

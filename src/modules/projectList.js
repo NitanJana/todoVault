@@ -8,11 +8,11 @@ export default class ProjectList {
     this.projectList.push(new Project('This Week'));
   }
 
-  setProjects(projectList) {
+  setProjectList(projectList) {
     this.projectList = projectList;
   }
 
-  getProjects() {
+  getProjectList() {
     return this.projectList;
   }
 
@@ -22,5 +22,9 @@ export default class ProjectList {
 
   getProject(projectName) {
     return this.projectList.find((project) => project.getName() === projectName);
+  }
+
+  getCurrentProject() {
+    return this.getProject(document.querySelector('.project-name').textContent);
   }
 }

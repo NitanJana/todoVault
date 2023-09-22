@@ -24,8 +24,6 @@ body {
 
 .sidebar {
   background-color: var(--primary-gray);
-  /* display: grid;
-  grid-template-rows: 1fr 2rem; */
 }
 
 .projects{
