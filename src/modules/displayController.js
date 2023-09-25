@@ -29,21 +29,38 @@ export default class DisplayController {
     todoListContainer.textContent = '';
     project.getTodoList().forEach((todo) => {
       const todoName = document.createElement('div');
-      const todoDescription = document.createElement('div');
       const deleteButton = document.createElement('button');
+      const expandButton = document.createElement('button');
+      const todoDescription = document.createElement('div');
       const todoContainer = document.createElement('div');
-      todoName.classList.add('todo-container-text');
-      todoDescription.classList.add('todo-container-text');
+
+      todoName.classList.add('todo-container-name');
+      todoDescription.classList.add('todo-container-description');
+      expandButton.classList.add('todo-container-expand-button');
       deleteButton.classList.add('todo-container-delete-button');
       todoContainer.classList.add('todo-container');
-      deleteButton.textContent = 'delete';
-      deleteButton.addEventListener ('click',DisplayController.handleDeleteTodoButton)
+      todoContainer.dataset.priority = todo.getPriority();
+
       todoName.textContent = todo.getName();
+      deleteButton.textContent = 'delete';
+      expandButton.textContent = 'open';
       todoDescription.textContent = todo.getDescription();
+
+      expandButton.addEventListener('click',DisplayController.handleExpandTodoButton);
+      deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
   
-      todoContainer.append(todoName,todoDescription,deleteButton);
+      todoContainer.append(todoName,deleteButton,expandButton,todoDescription);
       todoListContainer.append(todoContainer);
     });
+  }
+
+  static handleExpandTodoButton() {
+    const todoDescription = this.nextElementSibling;
+    if (todoDescription.style.maxHeight){
+      todoDescription.style.maxHeight = null;
+    } else {
+      todoDescription.style.maxHeight = todoDescription.scrollHeight + "px";
+    } 
   }
 
   static initProjectButtons() {
@@ -126,34 +143,18 @@ export default class DisplayController {
   static handleSaveTodoButton() {
     const todoCreateContainerName = document.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
-    
-    const todoName = document.createElement('div'); 
-    const todoDescription = document.createElement('div'); 
-    const deleteTodoButton = document.createElement('button');
-    const outputDiv = document.createElement('div');
-    
-    const todoListContainer = document.querySelector('.project-todoList-container');
-    const todoModal = document.querySelector('#todoModal');
-    
-    todoName.classList.add('todo-container-text');
-    todoDescription.classList.add('todo-container-text');
-    deleteTodoButton.classList.add('todo-container-delete-button');
-    todoName.textContent = todoCreateContainerName.value;
-    todoDescription.textContent = todoCreateContainerDescription.value;
+    const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
+
+    todoModal.close();
+    if (todoCreateContainerName.value) {
+      list.getCurrentProject().addTodo(todoCreateContainerName.value);
+      list.getCurrentProject().getTodo(todoCreateContainerName.value).setDescription(todoCreateContainerDescription.value)
+      list.getCurrentProject().getTodo(todoCreateContainerName.value).setPriority(todoCreateContainerPriority.value)
+    }
     todoCreateContainerName.value = '';
     todoCreateContainerDescription.value = '';
-    deleteTodoButton.textContent = 'delete';
+    DisplayController.loadProjectTodoList(list.getCurrentProject());
 
-    deleteTodoButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
-    
-    todoModal.close();
-    if (todoName.textContent) {
-      outputDiv.append(todoName,todoDescription, deleteTodoButton);
-      outputDiv.classList.add('todo-container');
-      todoListContainer.append(outputDiv);
-      list.getCurrentProject().addTodo(todoName.textContent);
-      list.getCurrentProject().getTodo(todoName.textContent).setDescription(todoDescription.textContent)
-    }
   }
 
   static handleDeleteTodoButton() {

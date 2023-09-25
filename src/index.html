@@ -13,11 +13,7 @@
         <div class="sidebar-default-project project-button">This Week</div>
       </div>
       <button class="create-new-project-button" id="create-new-project">
-        <img
-          src="./img/add-icon.svg"
-          alt=""
-          class="create-new-project-icon"
-        />
+        <img src="./img/add-icon.svg" alt="" class="create-new-project-icon" />
       </button>
     </div>
 
@@ -40,6 +36,12 @@
               class="todo-create-container-input"
               placeholder="Description"
             />
+            <select name="todoPriority" id="todo-create-container-priority" >
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="critical">Critical</option>
+            </select>
             <button class="save-todo-button">Save</button>
             <button class="cancel-todo-button">
               <img
