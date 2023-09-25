@@ -12,13 +12,45 @@
         <div class="sidebar-default-project project-button">Today</div>
         <div class="sidebar-default-project project-button">This Week</div>
       </div>
-      <div class="new-project" id="create-new-project">+</div>
+      <button class="create-new-project-button" id="create-new-project">
+        <img
+          src="./img/add-icon.svg"
+          alt=""
+          class="create-new-project-icon"
+        />
+      </button>
     </div>
 
     <div class="main">
       <div class="project-name"></div>
       <div class="project-description"></div>
       <div class="project-todoList-container"></div>
+      <dialog id="todoModal">
+        <form method="dialog" id="todoModalForm">
+          <div class="todo-create-container">
+            <input
+              type="text"
+              id="todo-create-container-name"
+              class="todo-create-container-input"
+              placeholder="Write a todo"
+            />
+            <input
+              type="text"
+              id="todo-create-container-description"
+              class="todo-create-container-input"
+              placeholder="Description"
+            />
+            <button class="save-todo-button">Save</button>
+            <button class="cancel-todo-button">
+              <img
+                src="./img/close-icon.svg"
+                alt=""
+                class="cancel-todo-button-icon"
+              />
+            </button>
+          </div>
+        </form>
+      </dialog>
       <div class="new-todo" id="create-new-todo">Add todo</div>
     </div>
   </body>

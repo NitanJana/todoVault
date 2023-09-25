@@ -28,18 +28,27 @@ export default class DisplayController {
     const todoListContainer = document.querySelector('.project-todoList-container');
     todoListContainer.textContent = '';
     project.getTodoList().forEach((todo) => {
-      const tempTodo = document.createElement('div');
+      const todoName = document.createElement('div');
+      const todoDescription = document.createElement('div');
       const deleteButton = document.createElement('button');
+      const todoContainer = document.createElement('div');
+      todoName.classList.add('todo-container-text');
+      todoDescription.classList.add('todo-container-text');
+      deleteButton.classList.add('todo-container-delete-button');
+      todoContainer.classList.add('todo-container');
       deleteButton.textContent = 'delete';
       deleteButton.addEventListener ('click',DisplayController.handleDeleteTodoButton)
-      tempTodo.textContent = todo.getName();
-      todoListContainer.append(tempTodo,deleteButton);
+      todoName.textContent = todo.getName();
+      todoDescription.textContent = todo.getDescription();
+  
+      todoContainer.append(todoName,todoDescription,deleteButton);
+      todoListContainer.append(todoContainer);
     });
   }
 
   static initProjectButtons() {
     const projectButtons = document.querySelectorAll('.project-button');
-    const newProjectButton = document.querySelector('.new-project');
+    const newProjectButton = document.querySelector('#create-new-project');
     const newTodoButton = document.querySelector('.new-todo');
 
     projectButtons.forEach((projectButton) => projectButton.addEventListener('click',DisplayController.handleProjectButtons));
@@ -63,8 +72,9 @@ export default class DisplayController {
       projectContainerInput.type = 'text';
       saveProjectButton.textContent = '✓';
       cancelProjectButton.textContent = 'x';
-      saveProjectButton.classList.add('project-save-button');
-      cancelProjectButton.classList.add('project-cancel-button');
+      projectContainerInput.classList.add('project-container-input');
+      saveProjectButton.classList.add('project-container-save-button');
+      cancelProjectButton.classList.add('project-container-cancel-button');
       projectContainerDiv.classList.add('project-create-container');
       projectContainerDiv.append(projectContainerInput, saveProjectButton, cancelProjectButton);
       document.getElementById('projects-container').appendChild(projectContainerDiv);    
@@ -76,14 +86,15 @@ export default class DisplayController {
         projectContainerDiv.remove();
       }); 
     } else {
-      existingProjectCreateContainer.focus();
+      existingProjectCreateContainer.children[0].focus();
     }
   }
   
   static handleSaveProjectButton() {
-    const projectContainerDiv = document.querySelector('.project-create-container')
-    const projectName = projectContainerDiv.children[0].value;
+    const projectContainerDiv = document.querySelector('.project-create-container');
+    const projectName = document.querySelector('.project-container-input').value;
     const outputDiv = document.createElement('div');
+
     if (projectName) {
       outputDiv.textContent = projectName;
       projectContainerDiv.replaceWith(outputDiv);
@@ -95,51 +106,58 @@ export default class DisplayController {
   }
 
   static createNewTodo() {
-    const existingTodoCreateContainer = document.querySelector('.todo-create-container');
-  
-    if (!existingTodoCreateContainer) {
-      const todoContainerInput = document.createElement('input');
-      const saveTodoButton = document.createElement('button');
-      const cancelTodoButton = document.createElement('button');
-      const todoCreateContainer = document.createElement('div');
-      
-      todoContainerInput.type = 'text';
-      saveTodoButton.textContent = 'Save';
-      cancelTodoButton.textContent = 'Cancel';
-      todoCreateContainer.classList.add('todo-create-container');
-      todoCreateContainer.append(todoContainerInput, saveTodoButton, cancelTodoButton);
-      document.querySelector('.project-todoList-container').appendChild(todoCreateContainer);
-      todoContainerInput.focus();
-      
-      saveTodoButton.addEventListener('click', DisplayController.handleSaveTodoButton);
-      
-      cancelTodoButton.addEventListener('click', function () {
-        todoCreateContainer.remove();
-      });
-    }else {
-    existingTodoCreateContainer.focus();
-    }
+    const todoModal = document.querySelector('#todoModal');
+    const todoCreateContainerName = document.querySelector('#todo-create-container-name');
+    const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
+    const saveTodoButton = document.querySelector('.save-todo-button');
+    const cancelTodoButton = document.querySelector('.cancel-todo-button');
+    todoCreateContainerName.focus();
+    todoModal.showModal();
+    
+    saveTodoButton.addEventListener('click', DisplayController.handleSaveTodoButton);
+    
+    cancelTodoButton.addEventListener('click', function () {
+      todoCreateContainerName.value = '';
+      todoCreateContainerDescription.value = '';
+      todoModal.close();
+    });
   }
   
   static handleSaveTodoButton() {
-    const todoCreateContainer = document.querySelector('.todo-create-container');
-    const todoText = todoCreateContainer.children[0].value;
+    const todoCreateContainerName = document.querySelector('#todo-create-container-name');
+    const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
+    
+    const todoName = document.createElement('div'); 
+    const todoDescription = document.createElement('div'); 
     const deleteTodoButton = document.createElement('button');
     const outputDiv = document.createElement('div');
-
+    
+    const todoListContainer = document.querySelector('.project-todoList-container');
+    const todoModal = document.querySelector('#todoModal');
+    
+    todoName.classList.add('todo-container-text');
+    todoDescription.classList.add('todo-container-text');
+    deleteTodoButton.classList.add('todo-container-delete-button');
+    todoName.textContent = todoCreateContainerName.value;
+    todoDescription.textContent = todoCreateContainerDescription.value;
+    todoCreateContainerName.value = '';
+    todoCreateContainerDescription.value = '';
     deleteTodoButton.textContent = 'delete';
+
     deleteTodoButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
-    if (todoText) {
-      outputDiv.append(todoText, deleteTodoButton);
+    
+    todoModal.close();
+    if (todoName.textContent) {
+      outputDiv.append(todoName,todoDescription, deleteTodoButton);
       outputDiv.classList.add('todo-container');
-      todoCreateContainer.replaceWith(outputDiv);
-      list.getCurrentProject().addTodo(todoText);
+      todoListContainer.append(outputDiv);
+      list.getCurrentProject().addTodo(todoName.textContent);
+      list.getCurrentProject().getTodo(todoName.textContent).setDescription(todoDescription.textContent)
     }
   }
 
   static handleDeleteTodoButton() {
-    list.getCurrentProject().removeTodo(this.previousSibling.textContent);
+    list.getCurrentProject().removeTodo(this.parentNode.children[0].textContent);
     DisplayController.openProject(list.getCurrentProject());
   }
-
 }
