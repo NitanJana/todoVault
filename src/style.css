@@ -145,6 +145,7 @@ body {
 #todo-create-container-priority{
   width: 7rem;
   outline: none;
+  border: none;
   border-radius: 1rem;
   padding: 0.3rem 1rem;
   background-color: #146cc4;
