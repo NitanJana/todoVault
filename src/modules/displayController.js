@@ -29,8 +29,8 @@ export default class DisplayController {
     todoListContainer.textContent = '';
     project.getTodoList().forEach((todo) => {
       const todoName = document.createElement('div');
-      const deleteButton = document.createElement('button');
-      const expandButton = document.createElement('button');
+      const deleteButton = document.createElement('img');
+      const expandButton = document.createElement('img');
       const todoDescription = document.createElement('div');
       const todoContainer = document.createElement('div');
 
@@ -42,8 +42,8 @@ export default class DisplayController {
       todoContainer.dataset.priority = todo.getPriority();
 
       todoName.textContent = todo.getName();
-      deleteButton.textContent = 'delete';
-      expandButton.textContent = 'open';
+      deleteButton.src = './img/delete-icon.svg';
+      expandButton.src = './img/expand-more-icon.svg';
       todoDescription.textContent = todo.getDescription();
 
       expandButton.addEventListener('click',DisplayController.handleExpandTodoButton);
@@ -56,12 +56,15 @@ export default class DisplayController {
 
   static handleExpandTodoButton() {
     const todoDescription = this.nextElementSibling;
-    if (todoDescription.style.maxHeight){
-      todoDescription.style.maxHeight = null;
+    if (todoDescription.classList.contains('todo-description-expanded')){
+      todoDescription.classList.remove('todo-description-expanded');
+      todoDescription.classList.add('todo-description-hidden');
     } else {
-      todoDescription.style.maxHeight = todoDescription.scrollHeight + "px";
+      todoDescription.classList.remove('todo-description-hidden');
+      todoDescription.classList.add('todo-description-expanded');
     } 
   }
+
 
   static initProjectButtons() {
     const projectButtons = document.querySelectorAll('.project-button');
@@ -144,9 +147,9 @@ export default class DisplayController {
     const todoCreateContainerName = document.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
-
-    todoModal.close();
+    
     if (todoCreateContainerName.value) {
+      todoModal.close();
       list.getCurrentProject().addTodo(todoCreateContainerName.value);
       list.getCurrentProject().getTodo(todoCreateContainerName.value).setDescription(todoCreateContainerDescription.value)
       list.getCurrentProject().getTodo(todoCreateContainerName.value).setPriority(todoCreateContainerPriority.value)
@@ -159,6 +162,7 @@ export default class DisplayController {
 
   static handleDeleteTodoButton() {
     list.getCurrentProject().removeTodo(this.parentNode.children[0].textContent);
-    DisplayController.openProject(list.getCurrentProject());
+    this.parentNode.remove();
+    // DisplayController.openProject(list.getCurrentProject());
   }
 }
