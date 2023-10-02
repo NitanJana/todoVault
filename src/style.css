@@ -114,6 +114,7 @@ body {
 
 #todoModalForm {
   height: 100%;
+  position: relative;
 }
 
 .todo-create-container {
@@ -195,7 +196,7 @@ body {
 
 .todo-container {
   display: grid;
-  grid-template-columns: 1fr 1rem 1rem;
+  grid-template-columns: 1fr 1rem 1rem 1rem;
   grid-template-rows: 2rem 1fr;
   column-gap: 2rem;
   align-items: center;
@@ -246,4 +247,24 @@ body {
 
 .todo-container-delete-button {
   border: none;
+}
+
+.toast-container {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toast {
+  background-color: #f0ad4e;;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 5px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.show-toast {
+  opacity: 1;
 }

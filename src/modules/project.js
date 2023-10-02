@@ -39,6 +39,6 @@ export default class Project {
   }
 
   getTodo(todoName) {
-    return this.todoList.find((todo) => todo.getName() === todoName)
+    return this.todoList.find((todo) => todo.getName() === todoName);
   }
 }

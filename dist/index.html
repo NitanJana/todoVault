@@ -20,7 +20,9 @@
     <div class="main">
       <div class="project-name"></div>
       <div class="project-description"></div>
+
       <div class="project-todoList-container"></div>
+
       <dialog id="todoModal">
         <form method="dialog" id="todoModalForm">
           <div class="todo-create-container">
@@ -36,7 +38,7 @@
               class="todo-create-container-input"
               placeholder="Description"
             />
-            <select name="todoPriority" id="todo-create-container-priority" >
+            <select name="todoPriority" id="todo-create-container-priority">
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>
@@ -50,10 +52,14 @@
                 class="cancel-todo-button-icon"
               />
             </button>
+            <div class="toast-container">
+      <div class="toast">This is a toast notification</div>
+    </div>
           </div>
         </form>
       </dialog>
       <div class="new-todo" id="create-new-todo">Add todo</div>
     </div>
+    
   </body>
 </html>
