@@ -2,29 +2,27 @@ import Project from "./project";
 
 export default class ProjectList {
   constructor() {
-    this.projectList = [];
-    this.projectList.push(new Project('Inbox'));
-    this.projectList.push(new Project('Today'));
-    this.projectList.push(new Project('This Week'));
+    this.projects = [];
+    this.projects.push(new Project('Inbox'));
+    this.projects.push(new Project('Today'));
+    this.projects.push(new Project('This Week'));
   }
 
-  setProjectList(projectList) {
-    this.projectList = projectList;
+  setProjects(projects) {
+    this.projects = projects;
   }
 
-  getProjectList() {
-    return this.projectList;
+  getProjects() {
+    return this.projects;
   }
 
   addProject(project) {
-    this.projectList.push(project);
+    this.projects.push(project);
   }
 
   getProject(projectName) {
-    return this.projectList.find((project) => project.getName() === projectName);
+    return this.projects.find((project) => project.getName() === projectName);
   }
 
-  getCurrentProject() {
-    return this.getProject(document.querySelector('.project-name').textContent);
-  }
+  
 }

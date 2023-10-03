@@ -2,20 +2,26 @@ import ToDo from "./todo";
 import Project from "./project";
 import ProjectList from "./projectList";
 import NotificationController from "./notificationController";
+import Storage from "./storage";
 
-const list = new ProjectList();
+// const projectList = new ProjectList();
 
 export default class DisplayController {
   static currentTodo = null;
   static loadHomePage() {
-    this.openProject(list.getProjectList()[0]);
-    this.initProjectButtons();
+    DisplayController.loadProjects();
+    DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
+    DisplayController.initProjectButtons();
+  }
+
+  static loadProjects() {
+    Storage.getProjectList().getProjects().forEach((project) =>DisplayController.addProjectButtons(project.getName()));
   }
 
   static openProject(project) {
-    this.loadProjectName(project);
-    this.loadProjectDescription(project);    
-    this.loadProjectTodoList(project);
+    DisplayController.loadProjectName(project);
+    DisplayController.loadProjectDescription(project);    
+    DisplayController.loadProjectTodoList(project);
   }
   
   static loadProjectName(project) {
@@ -84,7 +90,7 @@ export default class DisplayController {
   }
 
   static handleProjectButtons() {
-    DisplayController.openProject(list.getProject(this.textContent));
+    DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
   
   static createNewProject() {
@@ -127,9 +133,17 @@ export default class DisplayController {
       projectContainerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project project-button';
       outputDiv.addEventListener('click', DisplayController.handleProjectButtons);
-      list.addProject(new Project(projectName));
-      DisplayController.openProject(list.getProject(projectName));
+      Storage.addProject(new Project(projectName));
+      DisplayController.openProject(Storage.getProjectList().getProject(projectName));
     }
+  }
+
+  static addProjectButtons(projectName) {
+    const outputDiv = document.createElement('div');
+    outputDiv.textContent = projectName;
+    outputDiv.className = 'sidebar-user-project project-button';
+    outputDiv.addEventListener('click', DisplayController.handleProjectButtons); 
+    document.getElementById('projects-container').appendChild(outputDiv); 
   }
 
   static createNewTodo() {
@@ -151,7 +165,7 @@ export default class DisplayController {
   }
   
   static handleEditTodoContainerButton() {
-    let currentProject = list.getCurrentProject();
+    let currentProject = DisplayController.getCurrentProject();
     const currentTodo = currentProject.getTodo(this.parentNode.querySelector('.todo-container-name').textContent);
     DisplayController.currentTodo = currentTodo;
     const todoName = currentTodo.getName();
@@ -172,6 +186,9 @@ export default class DisplayController {
     saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
     
   }
+  static getCurrentProject() {
+    return Storage.getProjectList().getProject(document.querySelector('.project-name').textContent);
+  }
   
   static handleSaveTodoButton(e) {
     let currentTodo = DisplayController.currentTodo;
@@ -180,8 +197,7 @@ export default class DisplayController {
     const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
-    const saveTodoButton = todoModal.querySelector('.save-todo-button');
-    let currentProject = list.getCurrentProject();
+    let currentProject = DisplayController.getCurrentProject();
     if (todoCreateContainerName.value === "") {
       NotificationController.showToast('Todo name must not be empty');
     }
@@ -191,9 +207,11 @@ export default class DisplayController {
           NotificationController.showToast('Todo name already exists');
         }
         else {
-          currentProject.addTodo(todoCreateContainerName.value);
-          currentProject.getTodo(todoCreateContainerName.value).setDescription(todoCreateContainerDescription.value)
-          currentProject.getTodo(todoCreateContainerName.value).setPriority(todoCreateContainerPriority.value)
+          let todo = new ToDo();
+          todo.setName(todoCreateContainerName.value);
+          todo.setDescription(todoCreateContainerDescription.value)
+          todo.setPriority(todoCreateContainerPriority.value)
+          Storage.addTodo(currentProject,todo);
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
@@ -206,9 +224,7 @@ export default class DisplayController {
             NotificationController.showToast('Todo name already exists');
           }
           else {
-            currentTodo.setName(todoCreateContainerName.value);
-            currentTodo.setDescription(todoCreateContainerDescription.value);
-            currentTodo.setPriority(todoCreateContainerPriority.value);
+            Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value);
             todoModal.close();
             todoCreateContainerName.value = '';
             todoCreateContainerDescription.value = '';
@@ -216,9 +232,7 @@ export default class DisplayController {
           }
         }
         else {
-          currentTodo.setName(todoCreateContainerName.value);
-          currentTodo.setDescription(todoCreateContainerDescription.value);
-          currentTodo.setPriority(todoCreateContainerPriority.value);
+          Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value);
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
@@ -226,12 +240,12 @@ export default class DisplayController {
         }
       }
     }
-    DisplayController.loadProjectTodoList(list.getCurrentProject());
+    DisplayController.loadProjectTodoList(DisplayController.getCurrentProject());
   }
 
   static handleDeleteTodoButton() {
-    list.getCurrentProject().removeTodo(this.parentNode.children[0].textContent);
+    Storage.removeTodo(DisplayController.getCurrentProject(),this.parentNode.children[0].textContent);
     this.parentNode.remove();
-    // DisplayController.openProject(list.getCurrentProject());
+    // DisplayController.openProject(DisplayController.getCurrentProject());
   }
 }

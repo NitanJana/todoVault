@@ -30,8 +30,8 @@ export default class Project {
     return this.todoList;
   }
 
-  addTodo(todoName) {
-    this.todoList.push(new ToDo(todoName));
+  addTodo(todo) {
+    this.todoList.push(todo);
   }
 
   removeTodo(todo) {
