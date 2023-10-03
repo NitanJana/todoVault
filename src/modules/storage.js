@@ -43,4 +43,11 @@ export default class Storage{
     tempTodo.setPriority(newPriority);
     Storage.saveProjectList(projectList);
   }
+
+  static todoToggleCheckStatus(project, todoName) {
+    const projectList = Storage.getProjectList();
+    let tempTodo = projectList.getProject(project.getName()).getTodo(todoName);
+    tempTodo.toggleCheckStatus();
+    Storage.saveProjectList(projectList);
+  }
 }

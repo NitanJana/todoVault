@@ -4,6 +4,7 @@ export default class ToDo {
     this.description = description;
     this.dueDate = dueDate;
     this.priority = priority;
+    this.check = false;
   }
 
   setName(name) {
@@ -32,5 +33,13 @@ export default class ToDo {
   }
   getPriority() {
     return this.priority;
+  }
+
+  getCheckStatus() {
+    return this.check;
+  }
+
+  toggleCheckStatus() {
+    this.check = !this.check;
   }
 }

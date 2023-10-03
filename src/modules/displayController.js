@@ -42,8 +42,10 @@ export default class DisplayController {
       var checkboxInput = document.createElement('input');
       checkboxInput.classList.add('checkbox-input');
       checkboxInput.type = 'checkbox';
+      checkboxInput.checked = todo.getCheckStatus();
       checkboxInput.style.display = 'none';
       checkboxInput.id = todo.getName();
+      checkboxInput.addEventListener('click', DisplayController.handleToggleCheck);
 
       // Create the label element
       var checkboxLabel = document.createElement('label');
@@ -109,6 +111,9 @@ export default class DisplayController {
     });
   }
 
+  static handleToggleCheck() {
+    Storage.todoToggleCheckStatus(DisplayController.getCurrentProject(), this.id);
+  }
 
   static handleExpandTodoButton() {
     const todoDescription = this.nextElementSibling;
