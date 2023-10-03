@@ -34,32 +34,77 @@ export default class DisplayController {
     const todoListContainer = document.querySelector('.project-todoList-container');
     todoListContainer.textContent = '';
     project.getTodoList().forEach((todo) => {
-      const todoName = document.createElement('div');
-      const editButton = document.createElement('img');
-      const deleteButton = document.createElement('img');
-      const expandButton = document.createElement('img');
-      const todoDescription = document.createElement('div');
-      const todoContainer = document.createElement('div');
+      // Create the outer div element
+      var checkboxWrapper = document.createElement('div');
+      checkboxWrapper.classList.add('checkbox-wrapper');
 
+      // Create the input element
+      var checkboxInput = document.createElement('input');
+      checkboxInput.classList.add('checkbox-input');
+      checkboxInput.type = 'checkbox';
+      checkboxInput.style.display = 'none';
+      checkboxInput.id = todo.getName();
+
+      // Create the label element
+      var checkboxLabel = document.createElement('label');
+      checkboxLabel.classList.add('checkbox-label');
+      checkboxLabel.setAttribute('for', todo.getName());
+
+      // Create the first span element inside the label
+      var checkboxSvgWrapper = document.createElement('span');
+
+      // Create the svg element inside the first span
+      var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svgElement.setAttribute('width', '12px');
+      svgElement.setAttribute('height', '9px');
+      svgElement.setAttribute('viewBox', '0 0 12 9');
+
+      // Create the polyline element inside the svg
+      var polylineElement = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polylineElement.setAttribute('points', '1 5 4 8 11 1');
+
+      // Append the polyline to the svg, and svg to the first span
+      svgElement.appendChild(polylineElement);
+      checkboxSvgWrapper.appendChild(svgElement);
+
+      // Create the second span element inside the label
+      var todoName = document.createElement('span');
       todoName.classList.add('todo-container-name');
-      todoDescription.classList.add('todo-container-description');
-      editButton.classList.add('todo-container-edit-button');
-      deleteButton.classList.add('todo-container-delete-button');
-      expandButton.classList.add('todo-container-expand-button');
-      todoContainer.classList.add('todo-container');
-      todoContainer.dataset.priority = todo.getPriority();
-
       todoName.textContent = todo.getName();
+
+      // Append spans to the label
+      checkboxLabel.appendChild(checkboxSvgWrapper);
+      checkboxLabel.appendChild(todoName);
+
+      // Append input and label to the outer div
+      checkboxWrapper.appendChild(checkboxInput);
+      checkboxWrapper.appendChild(checkboxLabel);
+
+      
+      const editButton = document.createElement('img');
+      editButton.classList.add('todo-container-edit-button');
       editButton.src = './img/edit-icon.svg';
+      editButton.addEventListener('click',DisplayController.handleEditTodoContainerButton);
+
+      const deleteButton = document.createElement('img');
+      deleteButton.classList.add('todo-container-delete-button');
       deleteButton.src = './img/delete-icon.svg';
+      deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
+
+      const expandButton = document.createElement('img');
+      expandButton.classList.add('todo-container-expand-button');
       expandButton.src = './img/expand-more-icon.svg';
+      expandButton.addEventListener('click',DisplayController.handleExpandTodoButton);
+
+      const todoDescription = document.createElement('div');
+      todoDescription.classList.add('todo-container-description');
       todoDescription.textContent = todo.getDescription();
 
-      editButton.addEventListener('click',DisplayController.handleEditTodoContainerButton);
-      expandButton.addEventListener('click',DisplayController.handleExpandTodoButton);
-      deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
-  
-      todoContainer.append(todoName,editButton,deleteButton,expandButton,todoDescription);
+      const todoContainer = document.createElement('div');      
+      todoContainer.classList.add('todo-container');
+      todoContainer.dataset.priority = todo.getPriority();
+      todoContainer.append(checkboxWrapper,editButton,deleteButton,expandButton,todoDescription);
+
       todoListContainer.append(todoContainer);
     });
   }
@@ -252,3 +297,4 @@ export default class DisplayController {
     // DisplayController.openProject(DisplayController.getCurrentProject());
   }
 }
+
