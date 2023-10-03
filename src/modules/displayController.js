@@ -4,8 +4,6 @@ import ProjectList from "./projectList";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
 
-// const projectList = new ProjectList();
-
 export default class DisplayController {
   static currentTodo = null;
   static loadHomePage() {
@@ -150,6 +148,7 @@ export default class DisplayController {
     const todoModal = document.querySelector('#todoModal');
     const todoCreateContainerName = document.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
+    const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
     const saveTodoButton = document.querySelector('.save-todo-button');
     const cancelTodoButton = document.querySelector('.cancel-todo-button');
     todoCreateContainerName.focus();
@@ -160,6 +159,7 @@ export default class DisplayController {
     cancelTodoButton.addEventListener('click', function () {
       todoCreateContainerName.value = '';
       todoCreateContainerDescription.value = '';
+      todoCreateContainerPriority.value = 'low';
       todoModal.close();
     });
   }
@@ -215,6 +215,7 @@ export default class DisplayController {
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
+          todoCreateContainerPriority.value = 'low';
         }
       }
       else {
@@ -228,6 +229,7 @@ export default class DisplayController {
             todoModal.close();
             todoCreateContainerName.value = '';
             todoCreateContainerDescription.value = '';
+            todoCreateContainerPriority.value = 'low';
             DisplayController.currentTodo = null;
           }
         }
@@ -236,6 +238,7 @@ export default class DisplayController {
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
+          todoCreateContainerPriority.value = 'low';
           DisplayController.currentTodo = null;
         }
       }
