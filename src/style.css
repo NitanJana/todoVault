@@ -18,6 +18,7 @@
 html,body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -32,7 +33,7 @@ body {
 }
 
 .projects {
-  margin: 6.5rem 2rem;
+  margin: 6rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -81,7 +82,7 @@ body {
 /* Project page */
 .main {
   background-color: var(--primary-white);
-  padding: 6rem 15rem 0rem 4rem;
+  padding: 5rem 0 0 4rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -196,6 +197,11 @@ body {
 .project-todoList-container{
   display: grid;
   row-gap: 1rem;
+  max-height: 65%;
+  overflow-y: auto;
+}
+.project-todoList-container::-webkit-scrollbar {
+  display: none; /* Adjust as needed */
 }
 
 .todo-container {
@@ -370,4 +376,14 @@ body {
   50% {
     transform: scale(1.2);
   }
+}
+
+.todo-container-edit-button{
+  cursor: pointer;
+}
+.todo-container-delete-button{
+  cursor: pointer;
+}
+.todo-container-expand-button{
+  cursor: pointer;
 }
