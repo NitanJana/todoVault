@@ -89,17 +89,26 @@ export default class DisplayController {
       const editButton = document.createElement('img');
       editButton.classList.add('todo-container-edit-button');
       editButton.src = './img/edit-icon.svg';
+      editButton.draggable = false;
       editButton.addEventListener('click',DisplayController.handleEditTodoContainerButton);
 
       const deleteButton = document.createElement('img');
       deleteButton.classList.add('todo-container-delete-button');
       deleteButton.src = './img/delete-icon.svg';
+      deleteButton.draggable = false;
       deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
 
       const expandButton = document.createElement('img');
       expandButton.classList.add('todo-container-expand-button');
       expandButton.src = './img/expand-more-icon.svg';
-      expandButton.addEventListener('click',DisplayController.handleExpandTodoButton);
+      expandButton.draggable = false;
+      expandButton.addEventListener('click', DisplayController.handleExpandTodoButton);
+      
+      const dragButton = document.createElement('img');
+      dragButton.classList.add('todo-container-drag-button');
+      dragButton.src = './img/drag-icon.svg';
+      dragButton.draggable = false;
+
 
       const todoDescription = document.createElement('div');
       todoDescription.classList.add('todo-container-description');
@@ -111,7 +120,7 @@ export default class DisplayController {
       todoContainer.dataset.todoName = todo.getName(); 
       todoContainer.draggable = true;
 
-      todoContainer.append(checkboxWrapper,editButton,deleteButton,expandButton,todoDescription);
+      todoContainer.append(checkboxWrapper,editButton,deleteButton,expandButton,dragButton,todoDescription);
 
       todoListContainer.append(todoContainer);
       DisplayController.initDragAndDrop(); 
@@ -141,13 +150,13 @@ export default class DisplayController {
   
     if (!existingProjectCreateContainer) {
       const projectContainerInput = document.createElement('input');
-      const saveProjectButton = document.createElement('button');
-      const cancelProjectButton = document.createElement('button');
+      const saveProjectButton = document.createElement('img');
+      const cancelProjectButton = document.createElement('img');
       const projectContainerDiv = document.createElement('div');
       
       projectContainerInput.type = 'text';
-      saveProjectButton.textContent = '✓';
-      cancelProjectButton.textContent = 'x';
+      saveProjectButton.src = './img/check-icon.svg';
+      cancelProjectButton.src = './img/cancel-icon.svg';
       projectContainerInput.classList.add('project-container-input');
       saveProjectButton.classList.add('project-container-save-button');
       cancelProjectButton.classList.add('project-container-cancel-button');
@@ -294,7 +303,7 @@ export default class DisplayController {
   }
   
   static handleExpandTodoButton() {
-    const todoDescription = this.nextElementSibling;
+    const todoDescription = this.nextElementSibling.nextElementSibling;
     if (todoDescription.classList.contains('todo-description-expanded')){
       todoDescription.classList.remove('todo-description-expanded');
       todoDescription.classList.add('todo-description-hidden');

@@ -69,9 +69,6 @@ body {
   bottom: 1rem;
   left: 1rem;
 }
-.create-new-project-icon {
-  filter: invert();
-}
 
 /* Project Page */
 .main {
@@ -176,7 +173,6 @@ body {
 .cancel-todo-button-icon {
   height: 1rem;
   width: 1rem;
-  filter: invert();
   opacity: 0;
 }
 .cancel-todo-button-icon:hover {
@@ -201,7 +197,7 @@ body {
 /* Todo Container */
 .todo-container {
   display: grid;
-  grid-template-columns: 1fr 1rem 1rem 1rem;
+  grid-template-columns: 1fr 1rem 1rem 1rem 1rem;
   grid-template-rows: 2rem 1fr;
   column-gap: 1.6rem;
   align-items: center;
@@ -248,18 +244,14 @@ body {
   padding: 1rem;
   height: max-content;
 }
-.todo-container-edit-button, .todo-container-delete-button{
+.todo-container-edit-button, .todo-container-delete-button,.todo-container-expand-button{
   cursor: pointer;
   height: 1.3rem;
   opacity: 0;
   transition: 0.6s ease;
 }
-.todo-container:hover .todo-container-edit-button,.todo-container:hover .todo-container-delete-button{
+.todo-container:hover .todo-container-edit-button,.todo-container:hover .todo-container-delete-button,.todo-container:hover .todo-container-expand-button{
   opacity: 1;
-}
-.todo-container-expand-button{
-  justify-self: end;
-  cursor: pointer;
 }
 
 /* Todo Checkbox */
