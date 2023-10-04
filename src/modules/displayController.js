@@ -32,9 +32,30 @@ export default class DisplayController {
   }
   
   static loadDeleteProjectButton() {
-    const projectDeleteButton = document.querySelector('.project-delete-icon');
-    projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
-  }
+    const projectNameContainer = document.querySelector('.project-name-container');
+    const existingDeleteButton = projectNameContainer.querySelector('.project-delete-icon');
+
+    // Check if project name is one of the specified ones
+    const projectNamesToExclude = ['Inbox', 'This Week', 'Today'];
+    const projectName = projectNameContainer.querySelector('.project-name').textContent;
+
+    if (projectNamesToExclude.includes(projectName)) {
+        // Project name is one of the specified ones, do nothing
+        if (existingDeleteButton) {
+            existingDeleteButton.remove(); // Remove delete button if it exists
+        }
+    } else {
+        if (!existingDeleteButton) {
+            // Create and add delete button only if it doesn't exist
+            const projectDeleteButton = document.createElement('img');
+            projectDeleteButton.src = './img/delete-icon.svg';
+            projectDeleteButton.classList.add('project-delete-icon');
+            projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
+            projectNameContainer.appendChild(projectDeleteButton);
+        }
+    }
+}
+
 
   static handleDeleteProjectButton() {
     Storage.removeProject(DisplayController.getCurrentProject().getName());
@@ -155,8 +176,7 @@ export default class DisplayController {
   }
 
   static handleProjectButtons() {
-    console.log(Storage.getProjectList().getProject(this.children[0].textContent));
-    DisplayController.openProject(Storage.getProjectList().getProject(this.children[0].textContent));
+    DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
 
   static createNewProject() {
@@ -214,16 +234,22 @@ export default class DisplayController {
   static addProjectButtons(project) {
     const outputDiv = document.createElement('div');
     const projectName = document.createElement('div');
-    const deleteProject = document.createElement('img');
-
+    
     projectName.textContent = project.getName();
     projectName.classList.add('sidebar-project-name');
-    deleteProject.src = './img/delete-icon.svg';
-    deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
-    deleteProject.classList.add('sidebar-project-delete-icon');
-    outputDiv.append(projectName, deleteProject);
-    outputDiv.className = 'sidebar-user-project project-button';
     projectName.addEventListener('click', DisplayController.handleProjectButtons); 
+
+    if (projectName.textContent !== 'Inbox' && projectName.textContent !== 'Today' && projectName.textContent !== 'This Week') {
+      const deleteProject = document.createElement('img');
+      deleteProject.src = './img/delete-icon.svg';
+      deleteProject.classList.add('sidebar-project-delete-icon');
+      deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
+      outputDiv.append(projectName, deleteProject);
+    }
+    else {
+      outputDiv.append(projectName);
+    }
+    outputDiv.className = 'sidebar-user-project project-button';
     document.getElementById('projects-container').appendChild(outputDiv); 
   }
 
