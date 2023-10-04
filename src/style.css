@@ -202,6 +202,8 @@ body {
   max-height: 65%;
   overflow-y: auto;
   padding: 1rem 0;
+  scrollbar-width: thin; /* Set the width of the scrollbar */
+  scrollbar-color: transparent transparent;
 }
 .project-todoList-container:empty{
   max-height: 0;
@@ -209,6 +211,9 @@ body {
   overflow: hidden;
 }
 .project-todoList-container::-webkit-scrollbar {
+  display: none;
+}
+.project-todoList-container:hover::-webkit-scrollbar {
   display: none;
 }
 
@@ -222,12 +227,13 @@ body {
   width: 60%;
   padding: 0.5rem 1rem;
   border-radius: 0 1rem 1rem 0;
+  cursor: move;
   box-shadow: #959da533 0px 8px 24px;
   border-left: 4px solid var(--priority-color);
   transition: 1s ease;
 }
 .todo-container:hover{
-  box-shadow: #00000059 0px 5px 15px;
+  box-shadow: #e7e2e259 0px 0px 15px 2px;
 }
 
 .todo-container[data-priority="low"] {
@@ -396,4 +402,5 @@ body {
   position: absolute;
   z-index: 1000;
   opacity: 0.8;
+  box-shadow: none;
 }

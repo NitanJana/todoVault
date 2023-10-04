@@ -360,6 +360,7 @@ export default class DisplayController {
 
   static handleDragStart(e) {
     e.dataTransfer.setData('text/plain', e.target.dataset.todoName);
+    e.target.classList.add('dragging');
   }
 
   static handleDragOver(e) {
@@ -402,6 +403,7 @@ export default class DisplayController {
     projectList.setProjects(updatedProjects);
     Storage.saveProjectList(projectList);
   }
+    e.target.classList.remove('dragging');
 }
 
 
