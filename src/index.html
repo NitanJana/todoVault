@@ -7,16 +7,18 @@
   </head>
   <body>
     <div class="sidebar">
-      <div class="projects" id="projects-container">
-        
-      </div>
+      <div class="projects" id="projects-container"></div>
       <button class="create-new-project-button" id="create-new-project">
         <img src="./img/add-icon.svg" alt="" class="create-new-project-icon" />
       </button>
     </div>
 
     <div class="main">
-      <div class="project-name"></div>
+      <div class="project-name-container">
+        <div class="project-name"></div>
+        <img src="./img/delete-icon.svg" class="project-delete-icon" />
+      </div>
+
       <div class="project-description"></div>
 
       <div class="project-todoList-container"></div>
@@ -51,13 +53,12 @@
               />
             </button>
             <div class="toast-container">
-      <div class="toast">This is a toast notification</div>
-    </div>
+              <div class="toast">This is a toast notification</div>
+            </div>
           </div>
         </form>
       </dialog>
       <div class="new-todo" id="create-new-todo">Add todo</div>
     </div>
-    
   </body>
 </html>

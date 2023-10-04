@@ -40,6 +40,15 @@ body {
 }
 .project-button {
   cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.sidebar-project-delete-icon{
+  opacity: 0;
+  transition: 0.5s ease;
+}
+.project-button:hover .sidebar-project-delete-icon{
+  opacity: 1;
 }
 .project-create-container {
   display: flex;
@@ -73,10 +82,14 @@ body {
 /* Project Page */
 .main {
   background-color: var(--primary-white);
-  padding: 5rem 0 0 4rem;
+  padding: 5rem 10rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+}
+.project-name-container{
+  display: flex;
+  justify-content: space-between;
 }
 .project-name {
   font-size: 2rem;
@@ -86,6 +99,11 @@ body {
 .project-description {
   font-size: 1.05rem;
   color: var(--secondary-gray);
+}
+
+.project-delete-icon{
+  width: 2rem;
+  cursor: pointer;
 }
 
 /* New Todo Button */

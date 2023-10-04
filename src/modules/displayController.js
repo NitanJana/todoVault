@@ -13,11 +13,12 @@ export default class DisplayController {
   }
 
   static loadProjects() {
-    Storage.getProjectList().getProjects().forEach((project) =>DisplayController.addProjectButtons(project.getName()));
+    Storage.getProjectList().getProjects().forEach((project) =>DisplayController.addProjectButtons(project));
   }
 
   static openProject(project) {
     DisplayController.loadProjectName(project);
+    DisplayController.loadDeleteProjectButton();
     DisplayController.loadProjectDescription(project);    
     DisplayController.loadProjectTodoList(project);
   }
@@ -30,6 +31,18 @@ export default class DisplayController {
     document.querySelector('.project-name').textContent = project.getName();
   }
   
+  static loadDeleteProjectButton() {
+    const projectDeleteButton = document.querySelector('.project-delete-icon');
+    projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
+  }
+
+  static handleDeleteProjectButton() {
+    Storage.removeProject(DisplayController.getCurrentProject().getName());
+    document.querySelector('#projects-container').innerHTML = '';
+    DisplayController.loadProjects();
+    DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
+  }
+
   static loadProjectDescription(project) {
     document.querySelector('.project-description').textContent = project.getDescription();
   }
@@ -132,7 +145,7 @@ export default class DisplayController {
   }
 
   static initProjectButtons() {
-    const projectButtons = document.querySelectorAll('.project-button');
+    const projectButtons = document.querySelectorAll('.sidebar-project-name');
     const newProjectButton = document.querySelector('#create-new-project');
     const newTodoButton = document.querySelector('.new-todo');
 
@@ -142,6 +155,7 @@ export default class DisplayController {
   }
 
   static handleProjectButtons() {
+    console.log(this.children[0]);
     DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
 
@@ -177,25 +191,46 @@ export default class DisplayController {
   
   static handleSaveProjectButton() {
     const projectContainerDiv = document.querySelector('.project-create-container');
-    const projectName = document.querySelector('.project-container-input').value;
-    const outputDiv = document.createElement('div');
+    const projectName = document.createElement('div');
+    projectName.textContent = document.querySelector('.project-container-input').value;
+    
+    if (projectName.textContent) {
+      const outputDiv = document.createElement('div');
+      const deleteProject = document.createElement('img');
+      projectName.classList.add('sidebar-project-name');
 
-    if (projectName) {
-      outputDiv.textContent = projectName;
+      deleteProject.src = './img/delete-icon.svg';
+      deleteProject.classList.add('sidebar-project-delete-icon');
+      deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
+      outputDiv.append(projectName, deleteProject);
       projectContainerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project project-button';
-      outputDiv.addEventListener('click', DisplayController.handleProjectButtons);
-      Storage.addProject(new Project(projectName));
-      DisplayController.openProject(Storage.getProjectList().getProject(projectName));
+      projectName.addEventListener('click', DisplayController.handleProjectButtons);
+      Storage.addProject(new Project(projectName.textContent));
+      DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
     }
   }
 
-  static addProjectButtons(projectName) {
+  static addProjectButtons(project) {
     const outputDiv = document.createElement('div');
-    outputDiv.textContent = projectName;
+    const projectName = document.createElement('div');
+    const deleteProject = document.createElement('img');
+
+    projectName.textContent = project.getName();
+    projectName.classList.add('sidebar-project-name');
+    deleteProject.src = './img/delete-icon.svg';
+    deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
+    deleteProject.classList.add('sidebar-project-delete-icon');
+    outputDiv.append(projectName, deleteProject);
     outputDiv.className = 'sidebar-user-project project-button';
     outputDiv.addEventListener('click', DisplayController.handleProjectButtons); 
     document.getElementById('projects-container').appendChild(outputDiv); 
+  }
+
+  static handleDeleteSidebarProjectButton() {
+    Storage.removeProject(Storage.getProjectList().getProject(this.previousSibling.textContent).getName());
+    this.parentNode.remove();
+    DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
   }
 
   static createNewTodo() {

@@ -20,6 +20,10 @@ export default class ProjectList {
     this.projects.push(project);
   }
 
+  removeProject(projectName) {
+    this.setProjects(this.projects.filter(item => item !== this.getProject(projectName)));
+  }
+
   getProject(projectName) {
     return this.projects.find((project) => project.getName() === projectName);
   }

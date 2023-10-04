@@ -24,7 +24,11 @@ export default class Storage{
     projectList.addProject(project);
     Storage.saveProjectList(projectList);
   }
-
+  static removeProject(projectName) {
+    const projectList = Storage.getProjectList();
+    projectList.removeProject(projectName);
+    Storage.saveProjectList(projectList);
+  }
   static addTodo(project, todo) {
     const projectList = Storage.getProjectList();
     projectList.getProject(project.getName()).addTodo(todo);
