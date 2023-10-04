@@ -1,6 +1,5 @@
 import ToDo from "./todo";
 import Project from "./project";
-import ProjectList from "./projectList";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
 
@@ -20,6 +19,10 @@ export default class DisplayController {
     DisplayController.loadProjectName(project);
     DisplayController.loadProjectDescription(project);    
     DisplayController.loadProjectTodoList(project);
+  }
+
+  static getCurrentProject() {
+    return Storage.getProjectList().getProject(document.querySelector('.project-name').textContent);
   }
   
   static loadProjectName(project) {
@@ -81,8 +84,7 @@ export default class DisplayController {
       // Append input and label to the outer div
       checkboxWrapper.appendChild(checkboxInput);
       checkboxWrapper.appendChild(checkboxLabel);
-
-      
+     
       const editButton = document.createElement('img');
       editButton.classList.add('todo-container-edit-button');
       editButton.src = './img/edit-icon.svg';
@@ -111,21 +113,10 @@ export default class DisplayController {
     });
   }
 
+
   static handleToggleCheck() {
     Storage.todoToggleCheckStatus(DisplayController.getCurrentProject(), this.id);
   }
-
-  static handleExpandTodoButton() {
-    const todoDescription = this.nextElementSibling;
-    if (todoDescription.classList.contains('todo-description-expanded')){
-      todoDescription.classList.remove('todo-description-expanded');
-      todoDescription.classList.add('todo-description-hidden');
-    } else {
-      todoDescription.classList.remove('todo-description-hidden');
-      todoDescription.classList.add('todo-description-expanded');
-    } 
-  }
-
 
   static initProjectButtons() {
     const projectButtons = document.querySelectorAll('.project-button');
@@ -140,7 +131,7 @@ export default class DisplayController {
   static handleProjectButtons() {
     DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
-  
+
   static createNewProject() {
     const existingProjectCreateContainer = document.querySelector('.project-create-container');
   
@@ -213,33 +204,7 @@ export default class DisplayController {
       todoModal.close();
     });
   }
-  
-  static handleEditTodoContainerButton() {
-    let currentProject = DisplayController.getCurrentProject();
-    const currentTodo = currentProject.getTodo(this.parentNode.querySelector('.todo-container-name').textContent);
-    DisplayController.currentTodo = currentTodo;
-    const todoName = currentTodo.getName();
-    const todoDescription = currentTodo.getDescription();
-    const todoPriority = currentTodo.getPriority();
 
-    const todoModal = document.querySelector('#todoModal');
-    const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
-    const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
-    const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
-    const saveTodoButton = todoModal.querySelector('.save-todo-button');
-
-    todoModal.showModal();
-    todoCreateContainerName.value = todoName;
-    todoCreateContainerDescription.value = todoDescription;
-    todoCreateContainerPriority.value = todoPriority;
-    
-    saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
-    
-  }
-  static getCurrentProject() {
-    return Storage.getProjectList().getProject(document.querySelector('.project-name').textContent);
-  }
-  
   static handleSaveTodoButton(e) {
     let currentTodo = DisplayController.currentTodo;
     e.preventDefault();
@@ -253,7 +218,7 @@ export default class DisplayController {
     }
     else {
       if (currentTodo === null) {
-        if (currentProject.getTodo(todoCreateContainerName.value) !== undefined) {
+        if (currentProject.getTodo(todoCreateContainerName.value) !== undefined && currentProject.getTodo(todoCreateContainerName.value).getCheckStatus()===false) {
           NotificationController.showToast('Todo name already exists');
         }
         else {
@@ -270,7 +235,7 @@ export default class DisplayController {
       }
       else {
         if (currentTodo.getName() !== todoCreateContainerName.value) {
-          if (currentProject.getTodo(todoCreateContainerName.value) !== undefined) {
+          if (currentProject.getTodo(todoCreateContainerName.value) !== undefined && currentProject.getTodo(todoCreateContainerName.value).getCheckStatus()===false) {
             
             NotificationController.showToast('Todo name already exists');
           }
@@ -296,10 +261,42 @@ export default class DisplayController {
     DisplayController.loadProjectTodoList(DisplayController.getCurrentProject());
   }
 
+  static handleEditTodoContainerButton() {
+    let currentProject = DisplayController.getCurrentProject();
+    const currentTodo = currentProject.getTodo(this.parentNode.querySelector('.todo-container-name').textContent);
+    DisplayController.currentTodo = currentTodo;
+    const todoName = currentTodo.getName();
+    const todoDescription = currentTodo.getDescription();
+    const todoPriority = currentTodo.getPriority();
+
+    const todoModal = document.querySelector('#todoModal');
+    const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
+    const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
+    const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
+    const saveTodoButton = todoModal.querySelector('.save-todo-button');
+    
+    todoModal.showModal();
+    todoCreateContainerName.value = todoName;
+    todoCreateContainerDescription.value = todoDescription;
+    todoCreateContainerPriority.value = todoPriority;
+    
+    saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
+  }
+
   static handleDeleteTodoButton() {
     Storage.removeTodo(DisplayController.getCurrentProject(),this.parentNode.children[0].textContent);
     this.parentNode.remove();
     // DisplayController.openProject(DisplayController.getCurrentProject());
   }
+  
+  static handleExpandTodoButton() {
+    const todoDescription = this.nextElementSibling;
+    if (todoDescription.classList.contains('todo-description-expanded')){
+      todoDescription.classList.remove('todo-description-expanded');
+      todoDescription.classList.add('todo-description-hidden');
+    } else {
+      todoDescription.classList.remove('todo-description-hidden');
+      todoDescription.classList.add('todo-description-expanded');
+    } 
+  }
 }
-
