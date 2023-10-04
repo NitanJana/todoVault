@@ -155,8 +155,8 @@ export default class DisplayController {
   }
 
   static handleProjectButtons() {
-    console.log(this.children[0]);
-    DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
+    console.log(Storage.getProjectList().getProject(this.children[0].textContent));
+    DisplayController.openProject(Storage.getProjectList().getProject(this.children[0].textContent));
   }
 
   static createNewProject() {
@@ -223,7 +223,7 @@ export default class DisplayController {
     deleteProject.classList.add('sidebar-project-delete-icon');
     outputDiv.append(projectName, deleteProject);
     outputDiv.className = 'sidebar-user-project project-button';
-    outputDiv.addEventListener('click', DisplayController.handleProjectButtons); 
+    projectName.addEventListener('click', DisplayController.handleProjectButtons); 
     document.getElementById('projects-container').appendChild(outputDiv); 
   }
 
