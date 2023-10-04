@@ -9,6 +9,7 @@ export default class DisplayController {
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
     DisplayController.initProjectButtons();
+    
   }
 
   static loadProjects() {
@@ -38,11 +39,11 @@ export default class DisplayController {
     todoListContainer.textContent = '';
     project.getTodoList().forEach((todo) => {
       // Create the outer div element
-      var checkboxWrapper = document.createElement('div');
+      const checkboxWrapper = document.createElement('div');
       checkboxWrapper.classList.add('checkbox-wrapper');
 
       // Create the input element
-      var checkboxInput = document.createElement('input');
+      const checkboxInput = document.createElement('input');
       checkboxInput.classList.add('checkbox-input');
       checkboxInput.type = 'checkbox';
       checkboxInput.checked = todo.getCheckStatus();
@@ -51,21 +52,21 @@ export default class DisplayController {
       checkboxInput.addEventListener('click', DisplayController.handleToggleCheck);
 
       // Create the label element
-      var checkboxLabel = document.createElement('label');
+      const checkboxLabel = document.createElement('label');
       checkboxLabel.classList.add('checkbox-label');
       checkboxLabel.setAttribute('for', todo.getName());
 
       // Create the first span element inside the label
-      var checkboxSvgWrapper = document.createElement('span');
+      const checkboxSvgWrapper = document.createElement('span');
 
       // Create the svg element inside the first span
-      var svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svgElement.setAttribute('width', '12px');
       svgElement.setAttribute('height', '9px');
       svgElement.setAttribute('viewBox', '0 0 12 9');
 
       // Create the polyline element inside the svg
-      var polylineElement = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      const polylineElement = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
       polylineElement.setAttribute('points', '1 5 4 8 11 1');
 
       // Append the polyline to the svg, and svg to the first span
@@ -73,7 +74,7 @@ export default class DisplayController {
       checkboxSvgWrapper.appendChild(svgElement);
 
       // Create the second span element inside the label
-      var todoName = document.createElement('span');
+      const todoName = document.createElement('span');
       todoName.classList.add('todo-container-name');
       todoName.textContent = todo.getName();
 
@@ -107,9 +108,13 @@ export default class DisplayController {
       const todoContainer = document.createElement('div');      
       todoContainer.classList.add('todo-container');
       todoContainer.dataset.priority = todo.getPriority();
+      todoContainer.dataset.todoName = todo.getName(); 
+      todoContainer.draggable = true;
+
       todoContainer.append(checkboxWrapper,editButton,deleteButton,expandButton,todoDescription);
 
       todoListContainer.append(todoContainer);
+      DisplayController.initDragAndDrop(); 
     });
   }
 
@@ -298,4 +303,66 @@ export default class DisplayController {
       todoDescription.classList.add('todo-description-expanded');
     } 
   }
+  
+  static initDragAndDrop() {
+  const todoContainers = document.querySelectorAll('.todo-container');
+  
+  todoContainers.forEach((todoContainer) => {
+    todoContainer.addEventListener('dragstart', DisplayController.handleDragStart);
+    todoContainer.addEventListener('dragover', DisplayController.handleDragOver);
+    todoContainer.addEventListener('drop', DisplayController.handleDrop);
+  });
+  }
+
+  static handleDragStart(e) {
+    e.dataTransfer.setData('text/plain', e.target.dataset.todoName);
+  }
+
+  static handleDragOver(e) {
+    e.preventDefault();
+  }
+
+  static handleDrop(e) {
+  e.preventDefault();
+  const todoName = e.dataTransfer.getData('text/plain');
+  const droppedContainer = document.querySelector(`[data-todo-name="${todoName}"]`);
+  
+  if (droppedContainer !== this) {
+    const containerParent = this.parentElement;
+    const draggedIndex = Array.from(containerParent.children).indexOf(droppedContainer);
+    const dropIndex = Array.from(containerParent.children).indexOf(this);
+
+    if (dropIndex < draggedIndex) {
+      console.log("Drop index is less than pick index");
+      containerParent.insertBefore(droppedContainer, this);
+    } else {
+      containerParent.insertBefore(droppedContainer, this.nextSibling);
+    }
+    // Update the project's todo list
+    const currentProject = DisplayController.getCurrentProject();
+    const updatedTodoList = [...currentProject.getTodoList()];
+    const movedTodo = updatedTodoList.find(todo => todo.getName() === todoName);
+    
+    updatedTodoList.splice(updatedTodoList.indexOf(movedTodo), 1);
+    updatedTodoList.splice(Array.from(containerParent.children).indexOf(droppedContainer), 0, movedTodo);
+    currentProject.setTodoList(updatedTodoList);
+
+    // Update the project data in Storage
+    const projectList = Storage.getProjectList();
+    const updatedProjects = projectList.getProjects().map(project => {
+      if (project.getName() === currentProject.getName()) {
+        return currentProject;
+      }
+      return project;
+    });
+    projectList.setProjects(updatedProjects);
+    Storage.saveProjectList(projectList);
+  }
+}
+
+
+
+
+
+
 }

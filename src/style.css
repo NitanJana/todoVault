@@ -375,3 +375,15 @@ body {
 .show-toast {
   opacity: 1;
 }
+
+
+/* Add these CSS rules to enable dragging */
+.draggable {
+  cursor: move;
+}
+
+.draggable.dragging {
+  position: absolute;
+  z-index: 1000;
+  opacity: 0.8;
+}
