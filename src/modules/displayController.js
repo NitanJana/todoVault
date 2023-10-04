@@ -113,7 +113,6 @@ export default class DisplayController {
     });
   }
 
-
   static handleToggleCheck() {
     Storage.todoToggleCheckStatus(DisplayController.getCurrentProject(), this.id);
   }
