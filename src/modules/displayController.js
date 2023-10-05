@@ -8,6 +8,7 @@ export default class DisplayController {
   static loadHomePage() {
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
+    document.querySelector('.sidebar-project-name').classList.add('sidebar-project-name-selected');
     DisplayController.initProjectButtons();
     
   }
@@ -264,6 +265,8 @@ export default class DisplayController {
   }
 
   static handleProjectButtons() {
+    document.querySelectorAll('.sidebar-project-name').forEach((item)=>item.classList.remove('sidebar-project-name-selected'));
+    this.classList.add('sidebar-project-name-selected');
     DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
 
@@ -333,11 +336,12 @@ export default class DisplayController {
       deleteProject.classList.add('sidebar-project-delete-icon');
       deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
+      outputDiv.className = 'sidebar-user-project sidebar-project-button';
     }
     else {
       outputDiv.append(projectName);
+      outputDiv.className = 'sidebar-default-project sidebar-project-button';
     }
-    outputDiv.className = 'sidebar-user-project sidebar-project-button';
     document.getElementById('projects-container').appendChild(outputDiv); 
   }
 
