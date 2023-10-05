@@ -13,11 +13,13 @@ export default class DisplayController {
   }
 
   static loadProjects() {
+    document.querySelector('#projects-container').innerHTML='';
     Storage.getProjectList().getProjects().forEach((project) =>DisplayController.addProjectButtons(project));
   }
 
   static openProject(project) {
     DisplayController.loadProjectName(project);
+    DisplayController.loadEditProjectButton();
     DisplayController.loadDeleteProjectButton();
     DisplayController.loadProjectDescription(project);    
     DisplayController.loadProjectTodoList(project);
@@ -28,46 +30,132 @@ export default class DisplayController {
   }
   
   static loadProjectName(project) {
-    document.querySelector('.project-name').textContent = project.getName();
+    const projectName = document.querySelector('.project-name');
+    projectName.textContent = project.getName();
+    projectName.contentEditable = 'false';
+    projectName.classList.remove('editable');
+  }
+  
+  static loadEditProjectButton() {
+    const projectNameContainer = document.querySelector('.project-name-container');
+    const projectButtonsContainer = document.querySelector('.project-buttons');
+    const existingEditButton = projectNameContainer.querySelector('.project-edit-icon');
+    const projectEditSaveButton = document.querySelector('.project-edit-save-icon');
+    
+    if (projectEditSaveButton) {
+      projectEditSaveButton.remove();
+    }
+    
+    const projectNamesToExclude = ['Inbox', 'This Week', 'Today'];
+    const projectName = projectNameContainer.querySelector('.project-name').textContent;
+    
+    if (projectNamesToExclude.includes(projectName)) {
+      // Project name is one of the specified ones, do nothing
+      if (existingEditButton) {
+        existingEditButton.remove(); // Remove edit button if it exists
+      }
+    } else {
+      if (!existingEditButton) {
+        // Create and add edit button only if it doesn't exist
+        const projectEditButton = document.createElement('img');
+        projectEditButton.src = './img/edit-icon.svg';
+        projectEditButton.classList.add('project-edit-icon');
+        projectEditButton.addEventListener('click', DisplayController.handleEditProjectButton);
+        projectButtonsContainer.appendChild(projectEditButton);
+      }
+    }
   }
   
   static loadDeleteProjectButton() {
     const projectNameContainer = document.querySelector('.project-name-container');
+    const projectButtonsContainer = document.querySelector('.project-buttons');
     const existingDeleteButton = projectNameContainer.querySelector('.project-delete-icon');
-
+    
     // Check if project name is one of the specified ones
     const projectNamesToExclude = ['Inbox', 'This Week', 'Today'];
     const projectName = projectNameContainer.querySelector('.project-name').textContent;
-
+    
     if (projectNamesToExclude.includes(projectName)) {
-        // Project name is one of the specified ones, do nothing
-        if (existingDeleteButton) {
-            existingDeleteButton.remove(); // Remove delete button if it exists
-        }
-    } else {
-        if (!existingDeleteButton) {
-            // Create and add delete button only if it doesn't exist
-            const projectDeleteButton = document.createElement('img');
-            projectDeleteButton.src = './img/delete-icon.svg';
-            projectDeleteButton.classList.add('project-delete-icon');
-            projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
-            projectNameContainer.appendChild(projectDeleteButton);
-        }
+      // Project name is one of the specified ones, do nothing
+      if (existingDeleteButton) {
+        existingDeleteButton.remove(); // Remove delete button if it exists
+      }
     }
-}
-
-
+    else {
+      if (!existingDeleteButton) {
+        // Create and add delete button only if it doesn't exist
+        const projectDeleteButton = document.createElement('img');
+        projectDeleteButton.src = './img/delete-icon.svg';
+        projectDeleteButton.classList.add('project-delete-icon');
+        projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
+        projectButtonsContainer.appendChild(projectDeleteButton);
+      }
+    }
+  }
+  
+  static handleEditProjectButton() {
+    const projectButtonsContainer = document.querySelector('.project-buttons');
+    const projectName = document.querySelector('.project-name');
+    const projectDescription = document.querySelector('.project-description');
+    const currentProjectName = projectName.textContent;
+    const existingProjectEditSaveButton = document.querySelector('.project-edit-save-icon');
+    
+    if (!existingProjectEditSaveButton) {
+      const projectEditSaveButton = document.createElement('img');
+      projectEditSaveButton.classList.add('project-edit-save-icon');
+      projectEditSaveButton.src = './img/save-icon.svg';
+      projectEditSaveButton.addEventListener('click', () => DisplayController.handleProjectEditSaveButton(currentProjectName));
+      projectButtonsContainer.appendChild(projectEditSaveButton);
+      
+  }
+  
+  
+  projectName.contentEditable = 'true';
+  projectDescription.contentEditable = 'true';
+  projectName.spellcheck = false;
+  projectDescription.spellcheck = false;
+  projectName.classList.add('editable');
+  projectDescription.classList.add('editable');
+  
+  
+  let range = document.createRange();
+  range.selectNodeContents(projectDescription);
+  range.collapse(false);
+  let selection = window.getSelection();
+  selection.removeAllRanges();
+    selection.addRange(range);
+    
+    let range2 = document.createRange();
+    range2.selectNodeContents(projectName);
+    range2.collapse(false);
+    let selection2 = window.getSelection();
+    selection2.removeAllRanges();
+    selection2.addRange(range2);
+  }
+  
+  
   static handleDeleteProjectButton() {
     Storage.removeProject(DisplayController.getCurrentProject().getName());
     document.querySelector('#projects-container').innerHTML = '';
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
   }
-
-  static loadProjectDescription(project) {
-    document.querySelector('.project-description').textContent = project.getDescription();
+  
+  static handleProjectEditSaveButton(currentProjectName) {
+    const projectName = document.querySelector('.project-name');
+    const projectDescription = document.querySelector('.project-description');
+    Storage.editProject(currentProjectName, projectName.textContent, projectDescription.textContent);
+    DisplayController.loadProjects();
+    DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
   }
-
+  
+  static loadProjectDescription(project) {
+    const projectDescription = document.querySelector('.project-description');
+    projectDescription.textContent = project.getDescription();
+    projectDescription.contentEditable = 'false';
+    projectDescription.classList.remove('editable');
+  }
+  
   static loadProjectTodoList(project) {
     const todoListContainer = document.querySelector('.project-todoList-container');
     todoListContainer.textContent = '';
@@ -75,7 +163,7 @@ export default class DisplayController {
       // Create the outer div element
       const checkboxWrapper = document.createElement('div');
       checkboxWrapper.classList.add('checkbox-wrapper');
-
+      
       // Create the input element
       const checkboxInput = document.createElement('input');
       checkboxInput.classList.add('checkbox-input');
@@ -224,7 +312,7 @@ export default class DisplayController {
       deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
       projectContainerDiv.replaceWith(outputDiv);
-      outputDiv.className = 'sidebar-user-project project-button';
+      outputDiv.className = 'sidebar-user-project sidebar-project-button';
       projectName.addEventListener('click', DisplayController.handleProjectButtons);
       Storage.addProject(new Project(projectName.textContent));
       DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
@@ -249,7 +337,7 @@ export default class DisplayController {
     else {
       outputDiv.append(projectName);
     }
-    outputDiv.className = 'sidebar-user-project project-button';
+    outputDiv.className = 'sidebar-user-project sidebar-project-button';
     document.getElementById('projects-container').appendChild(outputDiv); 
   }
 
