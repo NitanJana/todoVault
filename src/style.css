@@ -257,7 +257,7 @@ body {
 .todo-container {
   display: grid;
   grid-template-columns: 1fr 1rem 1rem 1rem 1rem;
-  grid-template-rows: 2rem 1fr;
+  grid-template-rows: min-content;
   column-gap: 1.6rem;
   align-items: center;
   width: 60%;
@@ -290,7 +290,7 @@ body {
   font-size: 1rem;
 }
 .todo-container-description {
-  grid-column: 1/span 3;
+  grid-column: 1/span 5;
   text-align: justify;
   color: var(--secondary-gray);
   height: 0;
@@ -320,6 +320,10 @@ body {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
+  display: grid;
+  grid-template-columns: 1rem 1fr;
+  align-items: center;
+  align-content: center;
 }
 .checkbox-wrapper .checkbox-label span {
   display: inline-block;
@@ -366,16 +370,9 @@ body {
 .checkbox-wrapper .checkbox-label span:last-child {
   margin-left: 15px;
 }
-.checkbox-wrapper .checkbox-label span:last-child:after {
-  content: "";
-  position: absolute;
-  top: 10px;
-  left: 0;
-  height: 1px;
-  width: 100%;
-  background: #B9B8C3;
-  transform-origin: 0 0;
-  transform: scaleX(0);
+
+.checkbox-wrapper .checkbox-input:checked + .checkbox-label span:last-child {
+  text-decoration: line-through;
 }
 .checkbox-wrapper .checkbox-label:hover span:first-child {
   border-color: #3c53c7;
@@ -398,11 +395,6 @@ body {
   color: #B9B8C3;
   transition: all 0.3s ease;
 }
-.checkbox-wrapper .checkbox-input:checked + .checkbox-label span:last-child:after {
-  transform: scaleX(1);
-  transition: all 0.3s ease;
-}
-
 @keyframes check-15 {
   50% {
     transform: scale(1.2);

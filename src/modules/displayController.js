@@ -60,6 +60,7 @@ export default class DisplayController {
         // Create and add edit button only if it doesn't exist
         const projectEditButton = document.createElement('img');
         projectEditButton.src = './img/edit-icon.svg';
+        projectEditButton.title = 'Edit Project';
         projectEditButton.classList.add('project-edit-icon');
         projectEditButton.addEventListener('click', DisplayController.handleEditProjectButton);
         projectButtonsContainer.appendChild(projectEditButton);
@@ -87,6 +88,7 @@ export default class DisplayController {
         // Create and add delete button only if it doesn't exist
         const projectDeleteButton = document.createElement('img');
         projectDeleteButton.src = './img/delete-icon.svg';
+        projectDeleteButton.title = 'Delete Project';
         projectDeleteButton.classList.add('project-delete-icon');
         projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
         projectButtonsContainer.appendChild(projectDeleteButton);
@@ -105,6 +107,7 @@ export default class DisplayController {
       const projectEditSaveButton = document.createElement('img');
       projectEditSaveButton.classList.add('project-edit-save-icon');
       projectEditSaveButton.src = './img/save-icon.svg';
+      projectEditSaveButton.title = 'Save Changes';
       projectEditSaveButton.addEventListener('click', () => DisplayController.handleProjectEditSaveButton(currentProjectName));
       projectButtonsContainer.appendChild(projectEditSaveButton);
       
@@ -212,24 +215,28 @@ export default class DisplayController {
       const editButton = document.createElement('img');
       editButton.classList.add('todo-container-edit-button');
       editButton.src = './img/edit-icon.svg';
+      editButton.title = 'Edit Todo';
       editButton.draggable = false;
       editButton.addEventListener('click',DisplayController.handleEditTodoContainerButton);
 
       const deleteButton = document.createElement('img');
       deleteButton.classList.add('todo-container-delete-button');
       deleteButton.src = './img/delete-icon.svg';
+      deleteButton.title = 'Delete Todo';
       deleteButton.draggable = false;
       deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
 
       const expandButton = document.createElement('img');
       expandButton.classList.add('todo-container-expand-button');
       expandButton.src = './img/expand-more-icon.svg';
+      expandButton.title = 'Expand Todo';
       expandButton.draggable = false;
       expandButton.addEventListener('click', DisplayController.handleExpandTodoButton);
       
       const dragButton = document.createElement('img');
       dragButton.classList.add('todo-container-drag-button');
       dragButton.src = './img/drag-icon.svg';
+      dragButton.title = 'Drag Todo';
       dragButton.draggable = false;
 
 
@@ -311,12 +318,15 @@ export default class DisplayController {
       projectName.classList.add('sidebar-project-name');
 
       deleteProject.src = './img/delete-icon.svg';
+      deleteProject.title = 'Delete Project';
       deleteProject.classList.add('sidebar-project-delete-icon');
       deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
       projectContainerDiv.replaceWith(outputDiv);
       outputDiv.className = 'sidebar-user-project sidebar-project-button';
       projectName.addEventListener('click', DisplayController.handleProjectButtons);
+      document.querySelectorAll('.sidebar-project-name').forEach((item)=>item.classList.remove('sidebar-project-name-selected'));
+      projectName.classList.add('sidebar-project-name-selected');
       Storage.addProject(new Project(projectName.textContent));
       DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
     }
@@ -333,6 +343,7 @@ export default class DisplayController {
     if (projectName.textContent !== 'Inbox' && projectName.textContent !== 'Today' && projectName.textContent !== 'This Week') {
       const deleteProject = document.createElement('img');
       deleteProject.src = './img/delete-icon.svg';
+      deleteProject.title = 'Delete Project';
       deleteProject.classList.add('sidebar-project-delete-icon');
       deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
