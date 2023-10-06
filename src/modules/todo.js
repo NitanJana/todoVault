@@ -5,6 +5,7 @@ export default class ToDo {
     this.dueDate = dueDate;
     this.priority = priority;
     this.check = false;
+    this.projectName = null;
   }
 
   setName(name) {
@@ -12,6 +13,12 @@ export default class ToDo {
   }
   getName() {
     return this.name;
+  }
+  setProjectName(projectName) {
+    this.projectName = projectName;
+  }
+  getProjectName() {
+    return this.projectName;
   }
 
   setDescription(value) {

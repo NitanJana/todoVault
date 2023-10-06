@@ -1,6 +1,7 @@
 import ToDo from "./todo";
 import Project from "./project";
 import ProjectList from "./projectList";
+import { format, addDays, eachDayOfInterval } from 'date-fns';
 
 export default class Storage{
   static saveProjectList(data) {
@@ -55,11 +56,68 @@ export default class Storage{
     tempTodo.setDueDate(newDueDate);
     Storage.saveProjectList(projectList);
   }
-
   static todoToggleCheckStatus(project, todoName) {
     const projectList = Storage.getProjectList();
     let tempTodo = projectList.getProject(project.getName()).getTodo(todoName);
     tempTodo.toggleCheckStatus();
+    Storage.saveProjectList(projectList);
+  }
+  static loadTodayTodoList() {
+    const todayDate = format(new Date(), 'yyyy-MM-dd');
+    const projectList = Storage.getProjectList();
+    const todayProject = projectList.getProject('Today');
+    const weekProject = projectList.getProject('This Week');
+    todayProject.getTodoList().forEach((todo) => {
+      if (todo.getProjectName() !== null) { 
+        todayProject.removeTodo(todo.getName());
+      }
+    });
+    projectList.getProjects().forEach((project) => {
+      if (project !== weekProject && project !== todayProject) {
+        
+        project.getTodoList().forEach((todo) => {
+          if (todo.getDueDate() === todayDate) {
+            if (todayProject.getTodo(todo.getName()) === undefined) {
+              todo.setProjectName(project.getName());
+              todayProject.addTodo(todo);
+            } else {
+              todayProject.removeTodo(todo);
+            }
+          }
+        });
+      }
+    });
+    
+    Storage.saveProjectList(projectList);
+  }
+  static loadWeeklyTodoList() {
+    // Get array of the next 7 dates starting from today
+    const weekDates = eachDayOfInterval({ start: new Date(), end: addDays(new Date(), 7) }).map((date) => format(date, 'yyyy-MM-dd'));
+
+    const projectList = Storage.getProjectList();
+    const todayProject = projectList.getProject('Today');
+    const weekProject = projectList.getProject('This Week');
+    weekProject.getTodoList().forEach((todo) => {
+      if (todo.getProjectName() !== null) { 
+        weekProject.removeTodo(todo.getName());
+      }
+    });
+
+    projectList.getProjects().forEach((project) => {
+      if (project !== weekProject && project !== todayProject) {
+        
+        project.getTodoList().forEach((todo) => {
+          if (weekDates.includes(todo.getDueDate())) {
+            if (weekProject.getTodo(todo.getName()) === undefined) {
+              todo.setProjectName(project.getName());
+              weekProject.addTodo(todo);
+            } else {
+              weekProject.removeTodo(todo);
+            }
+          }
+        });
+      }
+      });
     Storage.saveProjectList(projectList);
   }
 }

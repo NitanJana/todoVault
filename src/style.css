@@ -23,7 +23,7 @@ html,body {
 body {
   font-family: "Ubuntu", sans-serif;
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: minmax(15rem,1fr) 4fr;
 }
 
 /* Sidebar Styles */
@@ -48,17 +48,19 @@ body {
   padding: 0 1rem;
 }
 .sidebar-project-name{
-  padding: 5px 10px;
+  padding: 0.4rem 1rem;
   border-radius: 1rem;
   transition: all 0.5s ease;
 }
 .sidebar-project-name:hover{
   color: var(--primary-white);
   background-color: var(--accent-color);
+  margin-left: 0.4rem;
 }
 .sidebar-project-name-selected{
   background-color: var(--accent-color);
   color: var(--primary-white);
+  margin-left: 0.4rem;
 }
 .sidebar-project-delete-icon{
   opacity: 0;

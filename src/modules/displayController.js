@@ -2,7 +2,7 @@ import ToDo from "./todo";
 import Project from "./project";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
-import { format, compareAsc } from 'date-fns'
+import { format } from 'date-fns';
 
 export default class DisplayController {
   static currentTodo = null;
@@ -263,7 +263,14 @@ export default class DisplayController {
   }
 
   static handleToggleCheck() {
-    Storage.todoToggleCheckStatus(DisplayController.getCurrentProject(), this.id);
+    const currentProject = DisplayController.getCurrentProject();
+    if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+      Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
+    }
+    if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+      Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
+    }
+    Storage.todoToggleCheckStatus(currentProject, this.id);
   }
 
   static initProjectButtons() {
@@ -279,6 +286,12 @@ export default class DisplayController {
   static handleProjectButtons() {
     document.querySelectorAll('.sidebar-project-name').forEach((item)=>item.classList.remove('sidebar-project-name-selected'));
     this.classList.add('sidebar-project-name-selected');
+    if (this.textContent === 'Today') {
+      Storage.loadTodayTodoList();
+    }
+    if (this.textContent === 'This Week') {
+      Storage.loadWeeklyTodoList();
+    }
     DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
 
@@ -428,6 +441,17 @@ export default class DisplayController {
             NotificationController.showToast('Todo name already exists');
           }
           else {
+            
+            if (currentProject.getName() === 'Today' && currentTodo.getProjectName() !== null) {
+
+              Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
+              
+            }
+            if (currentProject.getName() === 'This Week' && currentTodo.getProjectName() !== null) {
+
+              Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
+              
+            }
             Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
             todoModal.close();
             todoCreateContainerName.value = '';
@@ -438,6 +462,16 @@ export default class DisplayController {
           }
         }
         else {
+          if (currentProject.getName() === 'Today' && currentTodo.getProjectName() !== null) {
+
+            Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()), currentTodo.getName(), todoCreateContainerName.value, todoCreateContainerDescription.value, todoCreateContainerPriority.value, todoCreateContainerDueDate.value);
+            
+            }
+          if (currentProject.getName() === 'This Week' && currentTodo.getProjectName() !== null) {
+
+              Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
+              
+            }
           Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
           todoModal.close();
           todoCreateContainerName.value = '';
@@ -477,7 +511,14 @@ export default class DisplayController {
   }
 
   static handleDeleteTodoButton() {
-    Storage.removeTodo(DisplayController.getCurrentProject(),this.parentNode.children[0].textContent);
+    const currentProject = DisplayController.getCurrentProject();
+    if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
+      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
+    }
+    if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
+      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
+    }
+    Storage.removeTodo(currentProject,this.parentNode.children[0].textContent);
     this.parentNode.remove();
     // DisplayController.openProject(DisplayController.getCurrentProject());
   }
