@@ -2,6 +2,7 @@ import ToDo from "./todo";
 import Project from "./project";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
+import { format, compareAsc } from 'date-fns'
 
 export default class DisplayController {
   static currentTodo = null;
@@ -211,6 +212,10 @@ export default class DisplayController {
       // Append input and label to the outer div
       checkboxWrapper.appendChild(checkboxInput);
       checkboxWrapper.appendChild(checkboxLabel);
+
+      const todoDueDate = document.createElement('span');
+      todoDueDate.classList.add('todo-container-dueDate');
+      todoDueDate.textContent = todo.getDueDate();
      
       const editButton = document.createElement('img');
       editButton.classList.add('todo-container-edit-button');
@@ -250,7 +255,7 @@ export default class DisplayController {
       todoContainer.dataset.todoName = todo.getName(); 
       todoContainer.draggable = true;
 
-      todoContainer.append(checkboxWrapper,editButton,deleteButton,expandButton,dragButton,todoDescription);
+      todoContainer.append(checkboxWrapper,todoDueDate,editButton,deleteButton,expandButton,dragButton,todoDescription);
 
       todoListContainer.append(todoContainer);
       DisplayController.initDragAndDrop(); 
@@ -367,8 +372,10 @@ export default class DisplayController {
     const todoCreateContainerName = document.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
+    const todoCreateContainerDueDate = document.querySelector('#todo-create-container-dueDate');
     const saveTodoButton = document.querySelector('.save-todo-button');
     const cancelTodoButton = document.querySelector('.cancel-todo-button');
+    todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
     todoCreateContainerName.focus();
     todoModal.showModal();
     
@@ -378,6 +385,7 @@ export default class DisplayController {
       todoCreateContainerName.value = '';
       todoCreateContainerDescription.value = '';
       todoCreateContainerPriority.value = 'low';
+      todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
       todoModal.close();
     });
   }
@@ -389,6 +397,7 @@ export default class DisplayController {
     const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
+    const todoCreateContainerDueDate = todoModal.querySelector('#todo-create-container-dueDate');
     let currentProject = DisplayController.getCurrentProject();
     if (todoCreateContainerName.value === "") {
       NotificationController.showToast('Todo name must not be empty');
@@ -403,11 +412,13 @@ export default class DisplayController {
           todo.setName(todoCreateContainerName.value);
           todo.setDescription(todoCreateContainerDescription.value)
           todo.setPriority(todoCreateContainerPriority.value)
+          todo.setDueDate(todoCreateContainerDueDate.value)
           Storage.addTodo(currentProject,todo);
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
           todoCreateContainerPriority.value = 'low';
+          todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
         }
       }
       else {
@@ -417,20 +428,22 @@ export default class DisplayController {
             NotificationController.showToast('Todo name already exists');
           }
           else {
-            Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value);
+            Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
             todoModal.close();
             todoCreateContainerName.value = '';
             todoCreateContainerDescription.value = '';
             todoCreateContainerPriority.value = 'low';
+            todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
             DisplayController.currentTodo = null;
           }
         }
         else {
-          Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value);
+          Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
           todoModal.close();
           todoCreateContainerName.value = '';
           todoCreateContainerDescription.value = '';
           todoCreateContainerPriority.value = 'low';
+          todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
           DisplayController.currentTodo = null;
         }
       }
@@ -445,17 +458,20 @@ export default class DisplayController {
     const todoName = currentTodo.getName();
     const todoDescription = currentTodo.getDescription();
     const todoPriority = currentTodo.getPriority();
+    const todoDueDate = currentTodo.getDueDate();
 
     const todoModal = document.querySelector('#todoModal');
     const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
     const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
+    const todoCreateContainerDueDate = todoModal.querySelector('#todo-create-container-dueDate');
     const saveTodoButton = todoModal.querySelector('.save-todo-button');
     
     todoModal.showModal();
     todoCreateContainerName.value = todoName;
     todoCreateContainerDescription.value = todoDescription;
     todoCreateContainerPriority.value = todoPriority;
+    todoCreateContainerDueDate.value = todoDueDate;
     
     saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
   }

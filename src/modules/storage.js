@@ -46,12 +46,13 @@ export default class Storage{
     tempProject.setDescription(newDescription);
     Storage.saveProjectList(projectList);
   }
-  static editTodo(project, todoName,newName,newDescription,newPriority) {
+  static editTodo(project, todoName,newName,newDescription,newPriority,newDueDate) {
     const projectList = Storage.getProjectList();
     let tempTodo = projectList.getProject(project.getName()).getTodo(todoName);
     tempTodo.setName(newName);
     tempTodo.setDescription(newDescription);
     tempTodo.setPriority(newPriority);
+    tempTodo.setDueDate(newDueDate);
     Storage.saveProjectList(projectList);
   }
 
