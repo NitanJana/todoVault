@@ -19,6 +19,7 @@
 html,body {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 body {
   font-family: "Ubuntu", sans-serif;
@@ -451,15 +452,30 @@ textarea{
   opacity: 1;
 }
 
-
-/* Add these CSS rules to enable dragging */
+/* CSS rules to enable dragging */
 .draggable {
   cursor: move;
 }
-
 .draggable.dragging {
   position: absolute;
   z-index: 1000;
   opacity: 0.8;
   box-shadow: none;
+}
+
+/* Footer */
+.footer {
+  font-size: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  color: var(--secondary-gray);
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+}
+.footer-logo {
+  margin-left: 10px;
+  height: 30px;
+  aspect-ratio: 1;
 }
