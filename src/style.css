@@ -37,7 +37,7 @@ body {
   flex-direction: column;
   gap: 0.5rem;
 }
-.sidebar-default-project:nth-child(3){
+.sidebar-default-project:nth-child(4){
   padding-bottom: 1rem;
   border-bottom: 2px solid rgb(204, 204, 204);
 }

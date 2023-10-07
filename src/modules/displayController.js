@@ -48,7 +48,7 @@ export default class DisplayController {
       projectEditSaveButton.remove();
     }
     
-    const projectNamesToExclude = ['Inbox', 'This Week', 'Today'];
+    const projectNamesToExclude = ['Inbox', 'Today', 'This Week', 'Tomorrow'];
     const projectName = projectNameContainer.querySelector('.project-name').textContent;
     
     if (projectNamesToExclude.includes(projectName)) {
@@ -75,7 +75,7 @@ export default class DisplayController {
     const existingDeleteButton = projectNameContainer.querySelector('.project-delete-icon');
     
     // Check if project name is one of the specified ones
-    const projectNamesToExclude = ['Inbox', 'This Week', 'Today'];
+    const projectNamesToExclude = ['Inbox', 'Today', 'Tomorrow', 'This Week'];
     const projectName = projectNameContainer.querySelector('.project-name').textContent;
     
     if (projectNamesToExclude.includes(projectName)) {
@@ -267,6 +267,9 @@ export default class DisplayController {
     if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
       Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
     }
+    if (currentProject.getName() === 'Tomorrow' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+      Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
+    }
     if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
       Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
     }
@@ -288,6 +291,9 @@ export default class DisplayController {
     this.classList.add('sidebar-project-name-selected');
     if (this.textContent === 'Today') {
       Storage.loadTodayTodoList();
+    }
+    if (this.textContent === 'Tomorrow') {
+      Storage.loadTomorrowTodoList();
     }
     if (this.textContent === 'This Week') {
       Storage.loadWeeklyTodoList();
@@ -358,7 +364,7 @@ export default class DisplayController {
     projectName.classList.add('sidebar-project-name');
     projectName.addEventListener('click', DisplayController.handleProjectButtons); 
 
-    if (projectName.textContent !== 'Inbox' && projectName.textContent !== 'Today' && projectName.textContent !== 'This Week') {
+    if (projectName.textContent !== 'Inbox' && projectName.textContent !== 'Today' && projectName.textContent !== 'Tomorrow' && projectName.textContent !== 'This Week') {
       const deleteProject = document.createElement('img');
       deleteProject.src = './img/delete-icon.svg';
       deleteProject.title = 'Delete Project';
@@ -447,6 +453,11 @@ export default class DisplayController {
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
               
             }
+            if (currentProject.getName() === 'Tomorrow' && currentTodo.getProjectName() !== null) {
+
+              Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
+              
+            }
             if (currentProject.getName() === 'This Week' && currentTodo.getProjectName() !== null) {
 
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
@@ -463,6 +474,11 @@ export default class DisplayController {
         }
         else {
           if (currentProject.getName() === 'Today' && currentTodo.getProjectName() !== null) {
+
+            Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()), currentTodo.getName(), todoCreateContainerName.value, todoCreateContainerDescription.value, todoCreateContainerPriority.value, todoCreateContainerDueDate.value);
+            
+            }
+          if (currentProject.getName() === 'Tomorrow' && currentTodo.getProjectName() !== null) {
 
             Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()), currentTodo.getName(), todoCreateContainerName.value, todoCreateContainerDescription.value, todoCreateContainerPriority.value, todoCreateContainerDueDate.value);
             
@@ -513,6 +529,9 @@ export default class DisplayController {
   static handleDeleteTodoButton() {
     const currentProject = DisplayController.getCurrentProject();
     if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
+      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
+    }
+    if (currentProject.getName() === 'Tomorrow' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
       Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
     }
     if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
