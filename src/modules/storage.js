@@ -82,6 +82,7 @@ export default class Storage{
               todo.setProjectName(project.getName());
               todayProject.addTodo(todo);
             } else {
+              todo.setProjectName('Today');
               todayProject.removeTodo(todo);
             }
           }
@@ -111,6 +112,7 @@ export default class Storage{
               todo.setProjectName(project.getName());
               tomorrowProject.addTodo(todo);
             } else {
+              todo.setProjectName('Tomorrow');
               tomorrowProject.removeTodo(todo);
             }
           }
@@ -143,6 +145,7 @@ export default class Storage{
               todo.setProjectName(project.getName());
               weekProject.addTodo(todo);
             } else {
+              todo.setProjectName('This Week');
               weekProject.removeTodo(todo);
             }
           }

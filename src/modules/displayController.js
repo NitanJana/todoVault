@@ -528,19 +528,18 @@ export default class DisplayController {
 
   static handleDeleteTodoButton() {
     const currentProject = DisplayController.getCurrentProject();
-    if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
-      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
+    const todoText = this.parentNode.children[0].textContent;
+    const projectName = currentProject.getTodo(todoText).getProjectName();
+    
+    if (projectName && ['Today', 'Tomorrow', 'This Week'].includes(currentProject.getName())) {
+        const project = Storage.getProjectList().getProject(projectName);
+        if (project) {
+            Storage.removeTodo(project, todoText);
+        }
     }
-    if (currentProject.getName() === 'Tomorrow' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
-      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
-    }
-    if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()) !== null) {
-      Storage.removeTodo(Storage.getProjectList().getProject(currentProject.getTodo(this.parentNode.children[0].textContent).getProjectName()), this.parentNode.children[0].textContent);
-    }
-    Storage.removeTodo(currentProject,this.parentNode.children[0].textContent);
+    Storage.removeTodo(currentProject, todoText);
     this.parentNode.remove();
-    // DisplayController.openProject(DisplayController.getCurrentProject());
-  }
+}
   
   static handleExpandTodoButton() {
     const todoDescription = this.nextElementSibling.nextElementSibling;
