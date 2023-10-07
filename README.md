@@ -9,6 +9,7 @@ TodoVault App</h1>
 - [Usage](#usage)
 - [Modules](#modules)
 - [Contributing](#contributing)
+- [License](#license)
 
 ## Description
 
@@ -96,3 +97,7 @@ git push origin feature-name
 ```
 
 5. Create a new pull request.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
