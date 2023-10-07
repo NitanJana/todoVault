@@ -74,7 +74,7 @@ export default class Storage{
       }
     });
     projectList.getProjects().forEach((project) => {
-      if (project !== weekProject && project !== tomorrowProject && project !== todayProject) {
+      if (project !== todayProject) {
         
         project.getTodoList().forEach((todo) => {
           if (todo.getDueDate() === todayDate) {
@@ -104,7 +104,7 @@ export default class Storage{
       }
     });
     projectList.getProjects().forEach((project) => {
-      if (project !== weekProject && project !== tomorrowProject && project !== todayProject) {
+      if (project !== tomorrowProject) {
         
         project.getTodoList().forEach((todo) => {
           if (todo.getDueDate() === tomorrowDate) {
@@ -137,7 +137,7 @@ export default class Storage{
     });
 
     projectList.getProjects().forEach((project) => {
-      if (project !== weekProject && project !== tomorrowProject && project !== todayProject) {
+      if (project !== weekProject) {
         
         project.getTodoList().forEach((todo) => {
           if (weekDates.includes(todo.getDueDate())) {
