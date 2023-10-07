@@ -2,7 +2,7 @@ import ToDo from "./todo";
 import Project from "./project";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
-import { format } from 'date-fns';
+import { addDays, format } from 'date-fns';
 
 export default class DisplayController {
   static currentTodo = null;
@@ -392,9 +392,26 @@ export default class DisplayController {
     const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
     const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
     const todoCreateContainerDueDate = document.querySelector('#todo-create-container-dueDate');
+
+    const currentProjectName = DisplayController.getCurrentProject().getName();
+
     const saveTodoButton = document.querySelector('.save-todo-button');
     const cancelTodoButton = document.querySelector('.cancel-todo-button');
-    todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
+    if (currentProjectName === 'Today') {
+      todoCreateContainerDueDate.min = format(new Date(), 'yyyy-MM-dd');
+      todoCreateContainerDueDate.max = format(new Date(), 'yyyy-MM-dd');
+    }
+    else if (currentProjectName === 'Tomorrow') {
+      todoCreateContainerDueDate.min = format(addDays(new Date(),1), 'yyyy-MM-dd');
+      todoCreateContainerDueDate.max = format(addDays(new Date(),1), 'yyyy-MM-dd');
+      todoCreateContainerDueDate.value = format(addDays(new Date(),1), 'yyyy-MM-dd');
+    }
+    else if (currentProjectName === 'This Week') {
+      todoCreateContainerDueDate.min = format(new Date(), 'yyyy-MM-dd');
+      todoCreateContainerDueDate.max = format(addDays(new Date(),7), 'yyyy-MM-dd');
+    } else {
+      todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
+    }
     todoCreateContainerName.focus();
     todoModal.showModal();
     

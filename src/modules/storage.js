@@ -66,8 +66,6 @@ export default class Storage{
     const todayDate = format(new Date(), 'yyyy-MM-dd');
     const projectList = Storage.getProjectList();
     const todayProject = projectList.getProject('Today');
-    const tomorrowProject = projectList.getProject('Tomorrow');
-    const weekProject = projectList.getProject('This Week');
     todayProject.getTodoList().forEach((todo) => {
       if (todo.getProjectName() !== null) { 
         todayProject.removeTodo(todo.getName());
@@ -95,9 +93,7 @@ export default class Storage{
   static loadTomorrowTodoList() {
     const tomorrowDate = format(addDays(new Date(), 1), 'yyyy-MM-dd');
     const projectList = Storage.getProjectList();
-    const todayProject = projectList.getProject('Today');
     const tomorrowProject = projectList.getProject('Tomorrow');
-    const weekProject = projectList.getProject('This Week');
     tomorrowProject.getTodoList().forEach((todo) => {
       if (todo.getProjectName() !== null) { 
         tomorrowProject.removeTodo(todo.getName());
@@ -127,8 +123,6 @@ export default class Storage{
     const weekDates = eachDayOfInterval({ start: new Date(), end: addDays(new Date(), 7) }).map((date) => format(date, 'yyyy-MM-dd'));
 
     const projectList = Storage.getProjectList();
-    const todayProject = projectList.getProject('Today');
-    const tomorrowProject = projectList.getProject('Tomorrow');
     const weekProject = projectList.getProject('This Week');
     weekProject.getTodoList().forEach((todo) => {
       if (todo.getProjectName() !== null) { 
