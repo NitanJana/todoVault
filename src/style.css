@@ -168,30 +168,39 @@ body {
   position: relative;
 }
 .todo-create-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   position: relative;
-  gap: 0.5rem;
+  row-gap: 2rem;
   height: 100%;
   padding: 1rem;
+  justify-items: center;
+  align-items: center;
+  align-content: center;
 }
 .todo-create-container-input {
+  grid-column: 1/span 2;
   font-size: 1rem;
-  width: 50%;
+  width: 80%;
   padding: 0.2rem;
   border: none;
   border-bottom: 1px solid var(--accent-color);
   color: var(--secondary-gray);
   outline: none;
+  text-align: center;
+}
+textarea{
+  resize: none;
 }
 .todo-create-container-input::placeholder {
   color: var(--secondary-gray);
   opacity: 0.6;
   font-family: "Inconsolata", monospace;
   font-style: italic;
+  font-size: 1.1rem;
 }
 #todo-create-container-priority{
-  width: 7rem;
+  width: 8rem;
   outline: none;
   border: none;
   border-radius: 1rem;
@@ -199,20 +208,32 @@ body {
   background-color: #146cc4;
   color: #f1f1f1;
   cursor: pointer;
+  font-size: 1rem;
+}
+#todo-create-container-dueDate{
+  font-size: 1rem;
+  width: 10rem;
+  padding: 0.2rem;
+  border: none;
+  border-bottom: 1px solid var(--accent-color);
+  color: var(--secondary-gray);
+  outline: none;
+  text-align: left;
+  cursor: pointer;
+
 }
 .save-todo-button {
   border: none;
   border-radius: 1rem;
   padding: 0.5rem;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 700;
-  width: 5rem;
+  width: 7rem;
   color: var(--primary-white);
   background-color: var(--accent-color);
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
   cursor: pointer;
+  justify-self: center;
+  grid-column: 1/span 2;
 }
 .cancel-todo-button {
   border: none;
@@ -265,13 +286,13 @@ body {
   width: 80%;
   padding: 0.5rem 1rem;
   border-radius: 0 1rem 1rem 0;
-  cursor: move;
-  box-shadow: #959da533 0px 8px 24px;
+  /* cursor: move; */
+  box-shadow: #e7e2e259 0px 2px 15px 2px;
   border-left: 4px solid var(--priority-color);
   transition: 1s ease;
 }
 .todo-container:hover{
-  box-shadow: #e7e2e259 0px 0px 15px 2px;
+  box-shadow: #7f848a33 0px 8px 24px;
 }
 
 .todo-container[data-priority="low"] {
@@ -294,8 +315,8 @@ body {
 .todo-container-dueDate{
   font-size: 0.9rem;
   color: var(--secondary-gray);
-  opacity:0;
-  transition: 0.6s ease;
+  /* opacity:0;
+  transition: 0.6s ease; */
 }
 .todo-container-description {
   grid-column: 1/span 5;
@@ -315,8 +336,11 @@ body {
 .todo-container-edit-button, .todo-container-delete-button,.todo-container-expand-button{
   cursor: pointer;
   height: 1.3rem;
-  opacity: 0;
-  transition: 0.6s ease;
+  /* opacity: 0;
+  transition: 0.6s ease; */
+}
+.todo-container-drag-button{
+  cursor: move;
 }
 .todo-container:hover>*{
   opacity: 1;
