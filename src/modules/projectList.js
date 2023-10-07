@@ -3,9 +3,9 @@ import Project from "./project";
 export default class ProjectList {
   constructor() {
     this.projects = [];
-    this.projects.push(new Project('Inbox'));
-    this.projects.push(new Project('Today'));
-    this.projects.push(new Project('This Week'));
+    this.projects.push(new Project('Inbox','Where todos find their starting line.'));
+    this.projects.push(new Project('Today','The todo circus of the day!'));
+    this.projects.push(new Project('This Week','Where weekly todos throw a party.'));
   }
 
   setProjects(projects) {

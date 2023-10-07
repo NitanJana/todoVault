@@ -1,8 +1,8 @@
 import ToDo from "./todo";
 export default class Project {
-  constructor(name) {
+  constructor(name,description) {
     this.name = name;
-    this.description = `Keep The talk and the slides simple: what are the three things about these that everyone should remember?`;
+    this.description = description || `Simplify it! What are the three key tasks to remember moving forward?`;
     this.todoList = [];
   }
 
