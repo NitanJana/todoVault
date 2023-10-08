@@ -11,12 +11,15 @@ export default class ToDo {
   setName(name) {
     this.name = name;
   }
+
   getName() {
     return this.name;
   }
+
   setProjectName(projectName) {
     this.projectName = projectName;
   }
+  
   getProjectName() {
     return this.projectName;
   }
@@ -24,6 +27,7 @@ export default class ToDo {
   setDescription(value) {
     this.description = value;
   }
+
   getDescription() {
     return this.description;
   }
@@ -31,6 +35,7 @@ export default class ToDo {
   setDueDate(value) {
     this.dueDate = value;
   }
+
   getDueDate() {
     return this.dueDate;
   }
@@ -38,6 +43,7 @@ export default class ToDo {
   setPriority(value) {
     this.priority = value;
   }
+  
   getPriority() {
     return this.priority;
   }

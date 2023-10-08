@@ -1,21 +1,22 @@
+import { addDays, format } from "date-fns";
 import ToDo from "./todo";
 import Project from "./project";
 import NotificationController from "./notificationController";
 import Storage from "./storage";
-import { addDays, format } from 'date-fns';
 
 export default class DisplayController {
   static currentTodo = null;
+
   static loadHomePage() {
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
-    document.querySelector('.sidebar-project-name').classList.add('sidebar-project-name-selected');
+    document.querySelector(".sidebar-project-name").classList.add("sidebar-project-name-selected");
     DisplayController.initProjectButtons();
     
   }
 
   static loadProjects() {
-    document.querySelector('#projects-container').innerHTML='';
+    document.querySelector("#projects-container").innerHTML="";
     Storage.getProjectList().getProjects().forEach((project) =>DisplayController.addProjectButtons(project));
   }
 
@@ -28,55 +29,53 @@ export default class DisplayController {
   }
 
   static getCurrentProject() {
-    return Storage.getProjectList().getProject(document.querySelector('.project-name').textContent);
+    return Storage.getProjectList().getProject(document.querySelector(".project-name").textContent);
   }
   
   static loadProjectName(project) {
-    const projectName = document.querySelector('.project-name');
+    const projectName = document.querySelector(".project-name");
     projectName.textContent = project.getName();
-    projectName.contentEditable = 'false';
-    projectName.classList.remove('editable');
+    projectName.contentEditable = "false";
+    projectName.classList.remove("editable");
   }
   
   static loadEditProjectButton() {
-    const projectNameContainer = document.querySelector('.project-name-container');
-    const projectButtonsContainer = document.querySelector('.project-buttons');
-    const existingEditButton = projectNameContainer.querySelector('.project-edit-icon');
-    const projectEditSaveButton = document.querySelector('.project-edit-save-icon');
+    const projectNameContainer = document.querySelector(".project-name-container");
+    const projectButtonsContainer = document.querySelector(".project-buttons");
+    const existingEditButton = projectNameContainer.querySelector(".project-edit-icon");
+    const projectEditSaveButton = document.querySelector(".project-edit-save-icon");
     
     if (projectEditSaveButton) {
       projectEditSaveButton.remove();
     }
     
-    const projectNamesToExclude = ['Inbox', 'Today', 'This Week', 'Tomorrow'];
-    const projectName = projectNameContainer.querySelector('.project-name').textContent;
+    const projectNamesToExclude = ["Inbox", "Today", "This Week", "Tomorrow"];
+    const projectName = projectNameContainer.querySelector(".project-name").textContent;
     
     if (projectNamesToExclude.includes(projectName)) {
       // Project name is one of the specified ones, do nothing
       if (existingEditButton) {
         existingEditButton.remove(); // Remove edit button if it exists
       }
-    } else {
-      if (!existingEditButton) {
+    } else if (!existingEditButton) {
         // Create and add edit button only if it doesn't exist
-        const projectEditButton = document.createElement('img');
-        projectEditButton.src = './img/edit-icon.svg';
-        projectEditButton.title = 'Edit Project';
-        projectEditButton.classList.add('project-edit-icon');
-        projectEditButton.addEventListener('click', DisplayController.handleEditProjectButton);
+        const projectEditButton = document.createElement("img");
+        projectEditButton.src = "./img/edit-icon.svg";
+        projectEditButton.title = "Edit Project";
+        projectEditButton.classList.add("project-edit-icon");
+        projectEditButton.addEventListener("click", DisplayController.handleEditProjectButton);
         projectButtonsContainer.appendChild(projectEditButton);
       }
-    }
   }
   
   static loadDeleteProjectButton() {
-    const projectNameContainer = document.querySelector('.project-name-container');
-    const projectButtonsContainer = document.querySelector('.project-buttons');
-    const existingDeleteButton = projectNameContainer.querySelector('.project-delete-icon');
+    const projectNameContainer = document.querySelector(".project-name-container");
+    const projectButtonsContainer = document.querySelector(".project-buttons");
+    const existingDeleteButton = projectNameContainer.querySelector(".project-delete-icon");
     
     // Check if project name is one of the specified ones
-    const projectNamesToExclude = ['Inbox', 'Today', 'Tomorrow', 'This Week'];
-    const projectName = projectNameContainer.querySelector('.project-name').textContent;
+    const projectNamesToExclude = ["Inbox", "Today", "Tomorrow", "This Week"];
+    const projectName = projectNameContainer.querySelector(".project-name").textContent;
     
     if (projectNamesToExclude.includes(projectName)) {
       // Project name is one of the specified ones, do nothing
@@ -84,56 +83,54 @@ export default class DisplayController {
         existingDeleteButton.remove(); // Remove delete button if it exists
       }
     }
-    else {
-      if (!existingDeleteButton) {
+    else if (!existingDeleteButton) {
         // Create and add delete button only if it doesn't exist
-        const projectDeleteButton = document.createElement('img');
-        projectDeleteButton.src = './img/delete-icon.svg';
-        projectDeleteButton.title = 'Delete Project';
-        projectDeleteButton.classList.add('project-delete-icon');
-        projectDeleteButton.addEventListener('click', DisplayController.handleDeleteProjectButton);
+        const projectDeleteButton = document.createElement("img");
+        projectDeleteButton.src = "./img/delete-icon.svg";
+        projectDeleteButton.title = "Delete Project";
+        projectDeleteButton.classList.add("project-delete-icon");
+        projectDeleteButton.addEventListener("click", DisplayController.handleDeleteProjectButton);
         projectButtonsContainer.appendChild(projectDeleteButton);
       }
-    }
   }
   
   static handleEditProjectButton() {
-    const projectButtonsContainer = document.querySelector('.project-buttons');
-    const projectName = document.querySelector('.project-name');
-    const projectDescription = document.querySelector('.project-description');
+    const projectButtonsContainer = document.querySelector(".project-buttons");
+    const projectName = document.querySelector(".project-name");
+    const projectDescription = document.querySelector(".project-description");
     const currentProjectName = projectName.textContent;
-    const existingProjectEditSaveButton = document.querySelector('.project-edit-save-icon');
+    const existingProjectEditSaveButton = document.querySelector(".project-edit-save-icon");
     
     if (!existingProjectEditSaveButton) {
-      const projectEditSaveButton = document.createElement('img');
-      projectEditSaveButton.classList.add('project-edit-save-icon');
-      projectEditSaveButton.src = './img/save-icon.svg';
-      projectEditSaveButton.title = 'Save Changes';
-      projectEditSaveButton.addEventListener('click', () => DisplayController.handleProjectEditSaveButton(currentProjectName));
+      const projectEditSaveButton = document.createElement("img");
+      projectEditSaveButton.classList.add("project-edit-save-icon");
+      projectEditSaveButton.src = "./img/save-icon.svg";
+      projectEditSaveButton.title = "Save Changes";
+      projectEditSaveButton.addEventListener("click", () => DisplayController.handleProjectEditSaveButton(currentProjectName));
       projectButtonsContainer.appendChild(projectEditSaveButton);
       
   }
   
   
-  projectName.contentEditable = 'true';
-  projectDescription.contentEditable = 'true';
+  projectName.contentEditable = "true";
+  projectDescription.contentEditable = "true";
   projectName.spellcheck = false;
   projectDescription.spellcheck = false;
-  projectName.classList.add('editable');
-  projectDescription.classList.add('editable');
+  projectName.classList.add("editable");
+  projectDescription.classList.add("editable");
   
   
-  let range = document.createRange();
+  const range = document.createRange();
   range.selectNodeContents(projectDescription);
   range.collapse(false);
-  let selection = window.getSelection();
+  const selection = window.getSelection();
   selection.removeAllRanges();
     selection.addRange(range);
     
-    let range2 = document.createRange();
+    const range2 = document.createRange();
     range2.selectNodeContents(projectName);
     range2.collapse(false);
-    let selection2 = window.getSelection();
+    const selection2 = window.getSelection();
     selection2.removeAllRanges();
     selection2.addRange(range2);
   }
@@ -141,68 +138,68 @@ export default class DisplayController {
   
   static handleDeleteProjectButton() {
     Storage.removeProject(DisplayController.getCurrentProject().getName());
-    document.querySelector('#projects-container').innerHTML = '';
+    document.querySelector("#projects-container").innerHTML = "";
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProjects()[0]);
   }
   
   static handleProjectEditSaveButton(currentProjectName) {
-    const projectName = document.querySelector('.project-name');
-    const projectDescription = document.querySelector('.project-description');
+    const projectName = document.querySelector(".project-name");
+    const projectDescription = document.querySelector(".project-description");
     Storage.editProject(currentProjectName, projectName.textContent, projectDescription.textContent);
     DisplayController.loadProjects();
     DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
   }
   
   static loadProjectDescription(project) {
-    const projectDescription = document.querySelector('.project-description');
+    const projectDescription = document.querySelector(".project-description");
     projectDescription.textContent = project.getDescription();
-    projectDescription.contentEditable = 'false';
-    projectDescription.classList.remove('editable');
+    projectDescription.contentEditable = "false";
+    projectDescription.classList.remove("editable");
   }
   
   static loadProjectTodoList(project) {
-    const todoListContainer = document.querySelector('.project-todoList-container');
-    todoListContainer.textContent = '';
+    const todoListContainer = document.querySelector(".project-todoList-container");
+    todoListContainer.textContent = "";
     project.getTodoList().forEach((todo) => {
       // Create the outer div element
-      const checkboxWrapper = document.createElement('div');
-      checkboxWrapper.classList.add('checkbox-wrapper');
+      const checkboxWrapper = document.createElement("div");
+      checkboxWrapper.classList.add("checkbox-wrapper");
       
       // Create the input element
-      const checkboxInput = document.createElement('input');
-      checkboxInput.classList.add('checkbox-input');
-      checkboxInput.type = 'checkbox';
+      const checkboxInput = document.createElement("input");
+      checkboxInput.classList.add("checkbox-input");
+      checkboxInput.type = "checkbox";
       checkboxInput.checked = todo.getCheckStatus();
-      checkboxInput.style.display = 'none';
+      checkboxInput.style.display = "none";
       checkboxInput.id = todo.getName();
-      checkboxInput.addEventListener('click', DisplayController.handleToggleCheck);
+      checkboxInput.addEventListener("click", DisplayController.handleToggleCheck);
 
       // Create the label element
-      const checkboxLabel = document.createElement('label');
-      checkboxLabel.classList.add('checkbox-label');
-      checkboxLabel.setAttribute('for', todo.getName());
+      const checkboxLabel = document.createElement("label");
+      checkboxLabel.classList.add("checkbox-label");
+      checkboxLabel.setAttribute("for", todo.getName());
 
       // Create the first span element inside the label
-      const checkboxSvgWrapper = document.createElement('span');
+      const checkboxSvgWrapper = document.createElement("span");
 
       // Create the svg element inside the first span
       const svgElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svgElement.setAttribute('width', '12px');
-      svgElement.setAttribute('height', '9px');
-      svgElement.setAttribute('viewBox', '0 0 12 9');
+      svgElement.setAttribute("width", "12px");
+      svgElement.setAttribute("height", "9px");
+      svgElement.setAttribute("viewBox", "0 0 12 9");
 
       // Create the polyline element inside the svg
       const polylineElement = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
-      polylineElement.setAttribute('points', '1 5 4 8 11 1');
+      polylineElement.setAttribute("points", "1 5 4 8 11 1");
 
       // Append the polyline to the svg, and svg to the first span
       svgElement.appendChild(polylineElement);
       checkboxSvgWrapper.appendChild(svgElement);
 
       // Create the second span element inside the label
-      const todoName = document.createElement('span');
-      todoName.classList.add('todo-container-name');
+      const todoName = document.createElement("span");
+      todoName.classList.add("todo-container-name");
       todoName.textContent = todo.getName();
 
       // Append spans to the label
@@ -213,44 +210,44 @@ export default class DisplayController {
       checkboxWrapper.appendChild(checkboxInput);
       checkboxWrapper.appendChild(checkboxLabel);
 
-      const todoDueDate = document.createElement('span');
-      todoDueDate.classList.add('todo-container-dueDate');
+      const todoDueDate = document.createElement("span");
+      todoDueDate.classList.add("todo-container-dueDate");
       todoDueDate.textContent = todo.getDueDate();
      
-      const editButton = document.createElement('img');
-      editButton.classList.add('todo-container-edit-button');
-      editButton.src = './img/edit-icon.svg';
-      editButton.title = 'Edit Todo';
+      const editButton = document.createElement("img");
+      editButton.classList.add("todo-container-edit-button");
+      editButton.src = "./img/edit-icon.svg";
+      editButton.title = "Edit Todo";
       editButton.draggable = false;
-      editButton.addEventListener('click',DisplayController.handleEditTodoContainerButton);
+      editButton.addEventListener("click",DisplayController.handleEditTodoContainerButton);
 
-      const deleteButton = document.createElement('img');
-      deleteButton.classList.add('todo-container-delete-button');
-      deleteButton.src = './img/delete-icon.svg';
-      deleteButton.title = 'Delete Todo';
+      const deleteButton = document.createElement("img");
+      deleteButton.classList.add("todo-container-delete-button");
+      deleteButton.src = "./img/delete-icon.svg";
+      deleteButton.title = "Delete Todo";
       deleteButton.draggable = false;
-      deleteButton.addEventListener('click', DisplayController.handleDeleteTodoButton);
+      deleteButton.addEventListener("click", DisplayController.handleDeleteTodoButton);
 
-      const expandButton = document.createElement('img');
-      expandButton.classList.add('todo-container-expand-button');
-      expandButton.src = './img/expand-more-icon.svg';
-      expandButton.title = 'Expand Todo';
+      const expandButton = document.createElement("img");
+      expandButton.classList.add("todo-container-expand-button");
+      expandButton.src = "./img/expand-more-icon.svg";
+      expandButton.title = "Expand Todo";
       expandButton.draggable = false;
-      expandButton.addEventListener('click', DisplayController.handleExpandTodoButton);
+      expandButton.addEventListener("click", DisplayController.handleExpandTodoButton);
       
-      const dragButton = document.createElement('img');
-      dragButton.classList.add('todo-container-drag-button');
-      dragButton.src = './img/drag-icon.svg';
-      dragButton.title = 'Drag Todo';
+      const dragButton = document.createElement("img");
+      dragButton.classList.add("todo-container-drag-button");
+      dragButton.src = "./img/drag-icon.svg";
+      dragButton.title = "Drag Todo";
       dragButton.draggable = false;
 
 
-      const todoDescription = document.createElement('div');
-      todoDescription.classList.add('todo-container-description');
+      const todoDescription = document.createElement("div");
+      todoDescription.classList.add("todo-container-description");
       todoDescription.textContent = todo.getDescription();
 
-      const todoContainer = document.createElement('div');      
-      todoContainer.classList.add('todo-container');
+      const todoContainer = document.createElement("div");      
+      todoContainer.classList.add("todo-container");
       todoContainer.dataset.priority = todo.getPriority();
       todoContainer.dataset.todoName = todo.getName(); 
       todoContainer.draggable = true;
@@ -264,66 +261,66 @@ export default class DisplayController {
 
   static handleToggleCheck() {
     const currentProject = DisplayController.getCurrentProject();
-    if (currentProject.getName() === 'Today' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+    if (currentProject.getName() === "Today" && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
       Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
     }
-    if (currentProject.getName() === 'Tomorrow' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+    if (currentProject.getName() === "Tomorrow" && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
       Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
     }
-    if (currentProject.getName() === 'This Week' && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
+    if (currentProject.getName() === "This Week" && Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()) !== null) {
       Storage.todoToggleCheckStatus(Storage.getProjectList().getProject(currentProject.getTodo(this.id).getProjectName()), this.id);
     }
     Storage.todoToggleCheckStatus(currentProject, this.id);
   }
 
   static initProjectButtons() {
-    const projectButtons = document.querySelectorAll('.sidebar-project-name');
-    const newProjectButton = document.querySelector('#create-new-project');
-    const newTodoButton = document.querySelector('.new-todo');
+    const projectButtons = document.querySelectorAll(".sidebar-project-name");
+    const newProjectButton = document.querySelector("#create-new-project");
+    const newTodoButton = document.querySelector(".new-todo");
 
-    projectButtons.forEach((projectButton) => projectButton.addEventListener('click',DisplayController.handleProjectButtons));
-    newProjectButton.addEventListener('click', DisplayController.createNewProject);
-    newTodoButton.addEventListener('click', DisplayController.createNewTodo);
+    projectButtons.forEach((projectButton) => projectButton.addEventListener("click",DisplayController.handleProjectButtons));
+    newProjectButton.addEventListener("click", DisplayController.createNewProject);
+    newTodoButton.addEventListener("click", DisplayController.createNewTodo);
   }
 
   static handleProjectButtons() {
-    document.querySelectorAll('.sidebar-project-name').forEach((item)=>item.classList.remove('sidebar-project-name-selected'));
-    this.classList.add('sidebar-project-name-selected');
-    if (this.textContent === 'Today') {
+    document.querySelectorAll(".sidebar-project-name").forEach((item)=>item.classList.remove("sidebar-project-name-selected"));
+    this.classList.add("sidebar-project-name-selected");
+    if (this.textContent === "Today") {
       Storage.loadTodayTodoList();
     }
-    if (this.textContent === 'Tomorrow') {
+    if (this.textContent === "Tomorrow") {
       Storage.loadTomorrowTodoList();
     }
-    if (this.textContent === 'This Week') {
+    if (this.textContent === "This Week") {
       Storage.loadWeeklyTodoList();
     }
     DisplayController.openProject(Storage.getProjectList().getProject(this.textContent));
   }
 
   static createNewProject() {
-    const existingProjectCreateContainer = document.querySelector('.project-create-container');
+    const existingProjectCreateContainer = document.querySelector(".project-create-container");
   
     if (!existingProjectCreateContainer) {
-      const projectContainerInput = document.createElement('input');
-      const saveProjectButton = document.createElement('img');
-      const cancelProjectButton = document.createElement('img');
-      const projectContainerDiv = document.createElement('div');
+      const projectContainerInput = document.createElement("input");
+      const saveProjectButton = document.createElement("img");
+      const cancelProjectButton = document.createElement("img");
+      const projectContainerDiv = document.createElement("div");
       
-      projectContainerInput.type = 'text';
-      saveProjectButton.src = './img/check-icon.svg';
-      cancelProjectButton.src = './img/cancel-icon.svg';
-      projectContainerInput.classList.add('project-container-input');
-      saveProjectButton.classList.add('project-container-save-button');
-      cancelProjectButton.classList.add('project-container-cancel-button');
-      projectContainerDiv.classList.add('project-create-container');
+      projectContainerInput.type = "text";
+      saveProjectButton.src = "./img/check-icon.svg";
+      cancelProjectButton.src = "./img/cancel-icon.svg";
+      projectContainerInput.classList.add("project-container-input");
+      saveProjectButton.classList.add("project-container-save-button");
+      cancelProjectButton.classList.add("project-container-cancel-button");
+      projectContainerDiv.classList.add("project-create-container");
       projectContainerDiv.append(projectContainerInput, saveProjectButton, cancelProjectButton);
-      document.getElementById('projects-container').appendChild(projectContainerDiv);    
+      document.getElementById("projects-container").appendChild(projectContainerDiv);    
       projectContainerInput.focus();
       
-      saveProjectButton.addEventListener('click', DisplayController.handleSaveProjectButton);
+      saveProjectButton.addEventListener("click", DisplayController.handleSaveProjectButton);
       
-      cancelProjectButton.addEventListener('click', function() {
+      cancelProjectButton.addEventListener("click", () => {
         projectContainerDiv.remove();
       }); 
     } else {
@@ -332,52 +329,52 @@ export default class DisplayController {
   }
   
   static handleSaveProjectButton() {
-    const projectContainerDiv = document.querySelector('.project-create-container');
-    const projectName = document.createElement('div');
-    projectName.textContent = document.querySelector('.project-container-input').value;
+    const projectContainerDiv = document.querySelector(".project-create-container");
+    const projectName = document.createElement("div");
+    projectName.textContent = document.querySelector(".project-container-input").value;
     
     if (projectName.textContent) {
-      const outputDiv = document.createElement('div');
-      const deleteProject = document.createElement('img');
-      projectName.classList.add('sidebar-project-name');
+      const outputDiv = document.createElement("div");
+      const deleteProject = document.createElement("img");
+      projectName.classList.add("sidebar-project-name");
 
-      deleteProject.src = './img/delete-icon.svg';
-      deleteProject.title = 'Delete Project';
-      deleteProject.classList.add('sidebar-project-delete-icon');
-      deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
+      deleteProject.src = "./img/delete-icon.svg";
+      deleteProject.title = "Delete Project";
+      deleteProject.classList.add("sidebar-project-delete-icon");
+      deleteProject.addEventListener("click",DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
       projectContainerDiv.replaceWith(outputDiv);
-      outputDiv.className = 'sidebar-user-project sidebar-project-button';
-      projectName.addEventListener('click', DisplayController.handleProjectButtons);
-      document.querySelectorAll('.sidebar-project-name').forEach((item)=>item.classList.remove('sidebar-project-name-selected'));
-      projectName.classList.add('sidebar-project-name-selected');
+      outputDiv.className = "sidebar-user-project sidebar-project-button";
+      projectName.addEventListener("click", DisplayController.handleProjectButtons);
+      document.querySelectorAll(".sidebar-project-name").forEach((item)=>item.classList.remove("sidebar-project-name-selected"));
+      projectName.classList.add("sidebar-project-name-selected");
       Storage.addProject(new Project(projectName.textContent));
       DisplayController.openProject(Storage.getProjectList().getProject(projectName.textContent));
     }
   }
 
   static addProjectButtons(project) {
-    const outputDiv = document.createElement('div');
-    const projectName = document.createElement('div');
+    const outputDiv = document.createElement("div");
+    const projectName = document.createElement("div");
     
     projectName.textContent = project.getName();
-    projectName.classList.add('sidebar-project-name');
-    projectName.addEventListener('click', DisplayController.handleProjectButtons); 
+    projectName.classList.add("sidebar-project-name");
+    projectName.addEventListener("click", DisplayController.handleProjectButtons); 
 
-    if (projectName.textContent !== 'Inbox' && projectName.textContent !== 'Today' && projectName.textContent !== 'Tomorrow' && projectName.textContent !== 'This Week') {
-      const deleteProject = document.createElement('img');
-      deleteProject.src = './img/delete-icon.svg';
-      deleteProject.title = 'Delete Project';
-      deleteProject.classList.add('sidebar-project-delete-icon');
-      deleteProject.addEventListener('click',DisplayController.handleDeleteSidebarProjectButton);
+    if (projectName.textContent !== "Inbox" && projectName.textContent !== "Today" && projectName.textContent !== "Tomorrow" && projectName.textContent !== "This Week") {
+      const deleteProject = document.createElement("img");
+      deleteProject.src = "./img/delete-icon.svg";
+      deleteProject.title = "Delete Project";
+      deleteProject.classList.add("sidebar-project-delete-icon");
+      deleteProject.addEventListener("click",DisplayController.handleDeleteSidebarProjectButton);
       outputDiv.append(projectName, deleteProject);
-      outputDiv.className = 'sidebar-user-project sidebar-project-button';
+      outputDiv.className = "sidebar-user-project sidebar-project-button";
     }
     else {
       outputDiv.append(projectName);
-      outputDiv.className = 'sidebar-default-project sidebar-project-button';
+      outputDiv.className = "sidebar-default-project sidebar-project-button";
     }
-    document.getElementById('projects-container').appendChild(outputDiv); 
+    document.getElementById("projects-container").appendChild(outputDiv); 
   }
 
   static handleDeleteSidebarProjectButton() {
@@ -387,152 +384,148 @@ export default class DisplayController {
   }
 
   static createNewTodo() {
-    const todoModal = document.querySelector('#todoModal');
-    const todoCreateContainerName = document.querySelector('#todo-create-container-name');
-    const todoCreateContainerDescription = document.querySelector('#todo-create-container-description');
-    const todoCreateContainerPriority = document.querySelector('#todo-create-container-priority');
-    const todoCreateContainerDueDate = document.querySelector('#todo-create-container-dueDate');
+    const todoModal = document.querySelector("#todoModal");
+    const todoCreateContainerName = document.querySelector("#todo-create-container-name");
+    const todoCreateContainerDescription = document.querySelector("#todo-create-container-description");
+    const todoCreateContainerPriority = document.querySelector("#todo-create-container-priority");
+    const todoCreateContainerDueDate = document.querySelector("#todo-create-container-dueDate");
 
     const currentProjectName = DisplayController.getCurrentProject().getName();
 
-    const saveTodoButton = document.querySelector('.save-todo-button');
-    const cancelTodoButton = document.querySelector('.cancel-todo-button');
-    if (currentProjectName === 'Today') {
-      todoCreateContainerDueDate.min = format(new Date(), 'yyyy-MM-dd');
-      todoCreateContainerDueDate.max = format(new Date(), 'yyyy-MM-dd');
+    const saveTodoButton = document.querySelector(".save-todo-button");
+    const cancelTodoButton = document.querySelector(".cancel-todo-button");
+    if (currentProjectName === "Today") {
+      todoCreateContainerDueDate.min = format(new Date(), "yyyy-MM-dd");
+      todoCreateContainerDueDate.max = format(new Date(), "yyyy-MM-dd");
     }
-    else if (currentProjectName === 'Tomorrow') {
-      todoCreateContainerDueDate.min = format(addDays(new Date(),1), 'yyyy-MM-dd');
-      todoCreateContainerDueDate.max = format(addDays(new Date(),1), 'yyyy-MM-dd');
-      todoCreateContainerDueDate.value = format(addDays(new Date(),1), 'yyyy-MM-dd');
+    else if (currentProjectName === "Tomorrow") {
+      todoCreateContainerDueDate.min = format(addDays(new Date(),1), "yyyy-MM-dd");
+      todoCreateContainerDueDate.max = format(addDays(new Date(),1), "yyyy-MM-dd");
+      todoCreateContainerDueDate.value = format(addDays(new Date(),1), "yyyy-MM-dd");
     }
-    else if (currentProjectName === 'This Week') {
-      todoCreateContainerDueDate.min = format(new Date(), 'yyyy-MM-dd');
-      todoCreateContainerDueDate.max = format(addDays(new Date(),7), 'yyyy-MM-dd');
+    else if (currentProjectName === "This Week") {
+      todoCreateContainerDueDate.min = format(new Date(), "yyyy-MM-dd");
+      todoCreateContainerDueDate.max = format(addDays(new Date(),7), "yyyy-MM-dd");
     } else {
-      todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
+      todoCreateContainerDueDate.value = format(new Date(), "yyyy-MM-dd");
     }
     todoCreateContainerName.focus();
     todoModal.showModal();
     
-    saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
+    saveTodoButton.addEventListener("click",DisplayController.handleSaveTodoButton);
     
-    cancelTodoButton.addEventListener('click', function () {
-      todoCreateContainerName.value = '';
-      todoCreateContainerDescription.value = '';
-      todoCreateContainerPriority.value = 'low';
-      todoCreateContainerDueDate.value = format(new Date(), 'yyyy-MM-dd');
+    cancelTodoButton.addEventListener("click", () => {
+      todoCreateContainerName.value = "";
+      todoCreateContainerDescription.value = "";
+      todoCreateContainerPriority.value = "low";
+      todoCreateContainerDueDate.value = format(new Date(), "yyyy-MM-dd");
       todoModal.close();
     });
   }
 
   static handleSaveTodoButton(e) {
-    let currentTodo = DisplayController.currentTodo;
+    const {currentTodo} = DisplayController;
     e.preventDefault();
-    const todoModal = document.querySelector('#todoModal');
-    const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
-    const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
-    const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
-    const todoCreateContainerDueDate = todoModal.querySelector('#todo-create-container-dueDate');
-    let currentProject = DisplayController.getCurrentProject();
+    const todoModal = document.querySelector("#todoModal");
+    const todoCreateContainerName = todoModal.querySelector("#todo-create-container-name");
+    const todoCreateContainerDescription = todoModal.querySelector("#todo-create-container-description");
+    const todoCreateContainerPriority = todoModal.querySelector("#todo-create-container-priority");
+    const todoCreateContainerDueDate = todoModal.querySelector("#todo-create-container-dueDate");
+    const currentProject = DisplayController.getCurrentProject();
     if (todoCreateContainerName.value === "") {
-      NotificationController.showToast('Todo name must not be empty');
+      NotificationController.showToast("Todo name must not be empty");
     }
-    else {
-      if (currentTodo === null) {
+    else if (currentTodo === null) {
         if (currentProject.getTodo(todoCreateContainerName.value) !== undefined && currentProject.getTodo(todoCreateContainerName.value).getCheckStatus()===false) {
-          NotificationController.showToast('Todo name already exists');
+          NotificationController.showToast("Todo name already exists");
         }
         else {
-          let todo = new ToDo();
+          const todo = new ToDo();
           todo.setName(todoCreateContainerName.value);
           todo.setDescription(todoCreateContainerDescription.value)
           todo.setPriority(todoCreateContainerPriority.value)
           todo.setDueDate(todoCreateContainerDueDate.value)
           Storage.addTodo(currentProject,todo);
           todoModal.close();
-          todoCreateContainerName.value = '';
-          todoCreateContainerDescription.value = '';
-          todoCreateContainerPriority.value = 'low';
-          todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
+          todoCreateContainerName.value = "";
+          todoCreateContainerDescription.value = "";
+          todoCreateContainerPriority.value = "low";
+          todoCreateContainerDueDate.value = format(new Date(),"yyyy-MM-dd");
         }
       }
-      else {
-        if (currentTodo.getName() !== todoCreateContainerName.value) {
+      else if (currentTodo.getName() !== todoCreateContainerName.value) {
           if (currentProject.getTodo(todoCreateContainerName.value) !== undefined && currentProject.getTodo(todoCreateContainerName.value).getCheckStatus()===false) {
             
-            NotificationController.showToast('Todo name already exists');
+            NotificationController.showToast("Todo name already exists");
           }
           else {
             
-            if (currentProject.getName() === 'Today' && currentTodo.getProjectName() !== null) {
+            if (currentProject.getName() === "Today" && currentTodo.getProjectName() !== null) {
 
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
               
             }
-            if (currentProject.getName() === 'Tomorrow' && currentTodo.getProjectName() !== null) {
+            if (currentProject.getName() === "Tomorrow" && currentTodo.getProjectName() !== null) {
 
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
               
             }
-            if (currentProject.getName() === 'This Week' && currentTodo.getProjectName() !== null) {
+            if (currentProject.getName() === "This Week" && currentTodo.getProjectName() !== null) {
 
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
               
             }
             Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
             todoModal.close();
-            todoCreateContainerName.value = '';
-            todoCreateContainerDescription.value = '';
-            todoCreateContainerPriority.value = 'low';
-            todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
+            todoCreateContainerName.value = "";
+            todoCreateContainerDescription.value = "";
+            todoCreateContainerPriority.value = "low";
+            todoCreateContainerDueDate.value = format(new Date(),"yyyy-MM-dd");
             DisplayController.currentTodo = null;
           }
         }
         else {
-          if (currentProject.getName() === 'Today' && currentTodo.getProjectName() !== null) {
+          if (currentProject.getName() === "Today" && currentTodo.getProjectName() !== null) {
 
             Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()), currentTodo.getName(), todoCreateContainerName.value, todoCreateContainerDescription.value, todoCreateContainerPriority.value, todoCreateContainerDueDate.value);
             
             }
-          if (currentProject.getName() === 'Tomorrow' && currentTodo.getProjectName() !== null) {
+          if (currentProject.getName() === "Tomorrow" && currentTodo.getProjectName() !== null) {
 
             Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()), currentTodo.getName(), todoCreateContainerName.value, todoCreateContainerDescription.value, todoCreateContainerPriority.value, todoCreateContainerDueDate.value);
             
             }
-          if (currentProject.getName() === 'This Week' && currentTodo.getProjectName() !== null) {
+          if (currentProject.getName() === "This Week" && currentTodo.getProjectName() !== null) {
 
               Storage.editTodo(Storage.getProjectList().getProject(currentTodo.getProjectName()),currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
               
             }
           Storage.editTodo(currentProject,currentTodo.getName(),todoCreateContainerName.value,todoCreateContainerDescription.value,todoCreateContainerPriority.value,todoCreateContainerDueDate.value);
           todoModal.close();
-          todoCreateContainerName.value = '';
-          todoCreateContainerDescription.value = '';
-          todoCreateContainerPriority.value = 'low';
-          todoCreateContainerDueDate.value = format(new Date(),'yyyy-MM-dd');
+          todoCreateContainerName.value = "";
+          todoCreateContainerDescription.value = "";
+          todoCreateContainerPriority.value = "low";
+          todoCreateContainerDueDate.value = format(new Date(),"yyyy-MM-dd");
           DisplayController.currentTodo = null;
         }
-      }
-    }
     DisplayController.loadProjectTodoList(DisplayController.getCurrentProject());
   }
 
   static handleEditTodoContainerButton() {
-    let currentProject = DisplayController.getCurrentProject();
-    const currentTodo = currentProject.getTodo(this.parentNode.querySelector('.todo-container-name').textContent);
+    const currentProject = DisplayController.getCurrentProject();
+    const currentTodo = currentProject.getTodo(this.parentNode.querySelector(".todo-container-name").textContent);
     DisplayController.currentTodo = currentTodo;
     const todoName = currentTodo.getName();
     const todoDescription = currentTodo.getDescription();
     const todoPriority = currentTodo.getPriority();
     const todoDueDate = currentTodo.getDueDate();
 
-    const todoModal = document.querySelector('#todoModal');
-    const todoCreateContainerName = todoModal.querySelector('#todo-create-container-name');
-    const todoCreateContainerDescription = todoModal.querySelector('#todo-create-container-description');
-    const todoCreateContainerPriority = todoModal.querySelector('#todo-create-container-priority');
-    const todoCreateContainerDueDate = todoModal.querySelector('#todo-create-container-dueDate');
-    const saveTodoButton = todoModal.querySelector('.save-todo-button');
+    const todoModal = document.querySelector("#todoModal");
+    const todoCreateContainerName = todoModal.querySelector("#todo-create-container-name");
+    const todoCreateContainerDescription = todoModal.querySelector("#todo-create-container-description");
+    const todoCreateContainerPriority = todoModal.querySelector("#todo-create-container-priority");
+    const todoCreateContainerDueDate = todoModal.querySelector("#todo-create-container-dueDate");
+    const saveTodoButton = todoModal.querySelector(".save-todo-button");
     
     todoModal.showModal();
     todoCreateContainerName.value = todoName;
@@ -540,7 +533,7 @@ export default class DisplayController {
     todoCreateContainerPriority.value = todoPriority;
     todoCreateContainerDueDate.value = todoDueDate;
     
-    saveTodoButton.addEventListener('click',DisplayController.handleSaveTodoButton);
+    saveTodoButton.addEventListener("click",DisplayController.handleSaveTodoButton);
   }
 
   static handleDeleteTodoButton() {
@@ -548,7 +541,7 @@ export default class DisplayController {
     const todoText = this.parentNode.children[0].textContent;
     const projectName = currentProject.getTodo(todoText).getProjectName();
     
-    if (projectName && ['Today', 'Tomorrow', 'This Week'].includes(currentProject.getName())) {
+    if (projectName && ["Today", "Tomorrow", "This Week"].includes(currentProject.getName())) {
         const project = Storage.getProjectList().getProject(projectName);
         if (project) {
             Storage.removeTodo(project, todoText);
@@ -560,28 +553,28 @@ export default class DisplayController {
   
   static handleExpandTodoButton() {
     const todoDescription = this.nextElementSibling.nextElementSibling;
-    if (todoDescription.classList.contains('todo-description-expanded')){
-      todoDescription.classList.remove('todo-description-expanded');
-      todoDescription.classList.add('todo-description-hidden');
+    if (todoDescription.classList.contains("todo-description-expanded")){
+      todoDescription.classList.remove("todo-description-expanded");
+      todoDescription.classList.add("todo-description-hidden");
     } else {
-      todoDescription.classList.remove('todo-description-hidden');
-      todoDescription.classList.add('todo-description-expanded');
+      todoDescription.classList.remove("todo-description-hidden");
+      todoDescription.classList.add("todo-description-expanded");
     } 
   }
   
   static initDragAndDrop() {
-  const todoContainers = document.querySelectorAll('.todo-container');
+  const todoContainers = document.querySelectorAll(".todo-container");
   
   todoContainers.forEach((todoContainer) => {
-    todoContainer.addEventListener('dragstart', DisplayController.handleDragStart);
-    todoContainer.addEventListener('dragover', DisplayController.handleDragOver);
-    todoContainer.addEventListener('drop', DisplayController.handleDrop);
+    todoContainer.addEventListener("dragstart", DisplayController.handleDragStart);
+    todoContainer.addEventListener("dragover", DisplayController.handleDragOver);
+    todoContainer.addEventListener("drop", DisplayController.handleDrop);
   });
   }
 
   static handleDragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.dataset.todoName);
-    e.target.classList.add('dragging');
+    e.dataTransfer.setData("text/plain", e.target.dataset.todoName);
+    e.target.classList.add("dragging");
   }
 
   static handleDragOver(e) {
@@ -590,7 +583,7 @@ export default class DisplayController {
 
   static handleDrop(e) {
   e.preventDefault();
-  const todoName = e.dataTransfer.getData('text/plain');
+  const todoName = e.dataTransfer.getData("text/plain");
   const droppedContainer = document.querySelector(`[data-todo-name="${todoName}"]`);
   
   if (droppedContainer !== this) {
@@ -624,7 +617,7 @@ export default class DisplayController {
     projectList.setProjects(updatedProjects);
     Storage.saveProjectList(projectList);
   }
-    e.target.classList.remove('dragging');
+    e.target.classList.remove("dragging");
 }
 
 
